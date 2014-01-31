@@ -1,0 +1,33 @@
+{
+  "name": "otpprofiler.js",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "Conveyal",
+  "homepage": "http://conveyal.com/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/conveyal/otpprofiler.js.git"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "component": "*",
+    "component-uglifyjs": "*",
+    "jshint": "*"
+  },
+  "scripts": {
+    "test": "make lint"
+  },
+  "jshintConfig": {
+    "boss": true,
+    "browser": true,
+    "indent": 2,
+    "laxbreak": true,
+    "maxcomplexity": 10,
+    "node": true,
+    "quotmark": "single",
+    "trailing": true,
+    "undef": true
+  }
+}

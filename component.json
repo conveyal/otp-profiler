@@ -1,0 +1,17 @@
+{
+  "name": "otpprofilerjs",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "jashkenas/underscore": "*",
+    "jashkenas/backbone": "*",
+    "components/jquery": "*"
+  },
+  "development": {
+  },
+  "main": "lib/index.js",
+  "scripts": [
+    "lib/index.js",
+    "lib/models.js"  
+  ]
+}
