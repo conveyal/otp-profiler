@@ -12,6 +12,7 @@
   "main": "lib/index.js",
   "scripts": [
     "lib/index.js",
-    "lib/models.js"  
+    "lib/models.js",
+    "lib/transitive.js"  
   ]
 }
