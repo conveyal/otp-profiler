@@ -1,12 +1,15 @@
 
 COMPONENT := ./node_modules/.bin/component
-JS := $(shell find lib -name '*.js' -print)
+JS := $(shell find lib test -name '*.js' -print)
 
 PORT = 3000
 
 build: components $(JS)
 	$(MAKE) lint
 	$(COMPONENT) build --dev --verbose
+
+beautify: $(JS)
+	./node_modules/.bin/js-beautify --replace $(JS)
 
 clean:
 	rm -rf build components
