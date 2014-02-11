@@ -1,41 +1,31 @@
-COMPONENT := ./node_modules/.bin/component
-JSHINT := ./node_modules/.bin/jshint
-SERVE := ./node_modules/.bin/serve
 
+COMPONENT := ./node_modules/.bin/component
 JS := $(shell find lib -name '*.js' -print)
 
 PORT = 3000
 
-build: otpprofiler.js
+build: components $(JS)
+	$(MAKE) lint
+	$(COMPONENT) build --dev --verbose
 
 clean:
-	rm -rf build components node_modules
+	rm -rf build components
 
 components: component.json
 	$(COMPONENT) install --dev --verbose
 
-install: node_modules
+install: node_modules components
 
-# lint: $(JS)
-# 	$(JSHINT) --verbose $(JS)
+lint: $(JS)
+	./node_modules/.bin/jshint --verbose $(JS)
 
 node_modules: package.json
 	npm install
 
-release: otpprofiler.min.js
-
-server:
-	$(SERVE) --port $(PORT)
-
-otpprofiler.js: components $(JS)
-	$(MAKE) lint
-	$(COMPONENT) build --dev --verbose --out example/build
-	$(COMPONENT) build --verbose --standalone otpprofiler --out . --name otpprofiler
-
-otpprofiler.min.js: otp.js
-	$(COMPONENT) build --verbose --use component-uglifyjs --standalone otpprofiler --out . --name otpprofiler.min
+test:
+	$(COMPONENT) test phantom
 
 watch:
 	watch $(MAKE) build
 
-.PHONY: build clean install lint release server watch
+.PHONY: clean install lint test watch

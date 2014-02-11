@@ -1,18 +1,20 @@
 {
-  "name": "otpprofilerjs",
-  "version": "1.0.0",
-  "description": "",
+  "name": "otpprofiler.js",
+  "version": "0.1.0",
   "dependencies": {
+    "component/querystring": "*",
     "jashkenas/underscore": "*",
     "jashkenas/backbone": "*",
-    "components/jquery": "*"
+    "learnboost/jsonp": "*"
   },
   "development": {
+    "component/assert": "*",
+    "jkroso/equals": "*"
   },
   "main": "lib/index.js",
   "scripts": [
     "lib/index.js",
     "lib/models.js",
-    "lib/transitive.js"  
+    "lib/transitive.js"
   ]
 }
