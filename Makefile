@@ -5,30 +5,30 @@ JS := $(shell find lib test -name '*.js' -print)
 PORT = 3000
 
 build: components $(JS)
-	$(MAKE) lint
-	$(COMPONENT) build --dev --verbose
+	@$(MAKE) lint
+	@$(COMPONENT) build --dev --verbose
 
 beautify: node_modules $(JS)
-	./node_modules/.bin/js-beautify --replace $(JS)
+	@./node_modules/.bin/js-beautify --replace $(JS)
 
 clean:
 	rm -rf build components
 
 components: node_modules component.json
-	$(COMPONENT) install --dev
+	@$(COMPONENT) install --dev
 
 install: node_modules components
 
 lint: node_modules $(JS)
-	./node_modules/.bin/jshint --verbose $(JS)
+	@./node_modules/.bin/jshint --verbose $(JS)
 
 node_modules: package.json
-	npm install
+	@npm install
 
-test: node_modules
-	$(COMPONENT) test phantom
+test: build
+	@$(COMPONENT) test phantom
 
 watch:
-	watch $(MAKE) build
+	@watch $(MAKE) build
 
 .PHONY: clean install lint test watch
