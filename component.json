@@ -8,8 +8,7 @@
     "learnboost/jsonp": "*"
   },
   "development": {
-    "component/assert": "*",
-    "jkroso/equals": "*"
+    "component/assert": "*"
   },
   "main": "lib/index.js",
   "scripts": [
