@@ -8,7 +8,7 @@
     "url": "git://github.com/conveyal/otpprofiler.js.git"
   },
   "devDependencies": {
-    "component": "*",
+    "component": "^0.19.8",
     "component-test": "*",
     "js-beautify": "*",
     "jshint": "*"
