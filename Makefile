@@ -8,24 +8,24 @@ build: components $(JS)
 	$(MAKE) lint
 	$(COMPONENT) build --dev --verbose
 
-beautify: $(JS)
+beautify: node_modules $(JS)
 	./node_modules/.bin/js-beautify --replace $(JS)
 
 clean:
 	rm -rf build components
 
-components: component.json
-	$(COMPONENT) install --dev --verbose
+components: node_modules component.json
+	$(COMPONENT) install --dev
 
 install: node_modules components
 
-lint: $(JS)
+lint: node_modules $(JS)
 	./node_modules/.bin/jshint --verbose $(JS)
 
 node_modules: package.json
 	npm install
 
-test:
+test: node_modules
 	$(COMPONENT) test phantom
 
 watch:
