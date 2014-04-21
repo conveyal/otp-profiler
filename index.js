@@ -49,7 +49,11 @@ Profiler.prototype.journey = function(opts, callback) {
 
   // Get routes asynchronously
   batch.push(function(done) {
-    profiler.routes(done);
+    if (opts.routes) {
+      done(null, opts.routes);
+    } else {
+      profiler.routes(done);
+    }
   });
 
   batch.end(function(err, results) {
