@@ -1,14 +1,12 @@
 
 COMPONENT := ./node_modules/.bin/component
-JS := $(shell find lib test -name '*.js' -print)
+JS := index.js test/index.js
 
-PORT = 3000
-
-build: components $(JS)
+build: install $(JS)
 	@$(MAKE) lint
 	@$(COMPONENT) build --dev --verbose
 
-beautify: node_modules $(JS)
+beautify: install $(JS)
 	@./node_modules/.bin/js-beautify --replace $(JS)
 
 clean:
@@ -19,7 +17,7 @@ components: node_modules component.json
 
 install: node_modules components
 
-lint: node_modules $(JS)
+lint: install $(JS)
 	@./node_modules/.bin/jshint --verbose $(JS)
 
 node_modules: package.json
@@ -31,4 +29,4 @@ test: build
 watch:
 	@watch $(MAKE) build
 
-.PHONY: clean install lint test watch
+.PHONY: beautify clean install lint test watch

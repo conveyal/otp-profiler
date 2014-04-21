@@ -1,8 +1,3 @@
-dist/
-node_modules/
-bower_components/
-components/
-example/build/
-otpprofiler.js
-otpprofiler.css
+node_modules
+components
 build
