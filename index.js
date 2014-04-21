@@ -18,10 +18,10 @@ module.exports = Profiler;
 
 function Profiler(opts) {
   if (!(this instanceof Profiler)) return new Profiler(opts);
-  if (!opts.url) throw new Error('Profiler requires a url.');
+  if (!opts.host) throw new Error('Profiler requires a host.');
 
   this.limit = opts.limit || 3;
-  this.url = opts.url;
+  this.host = opts.host;
 }
 
 /**
@@ -353,12 +353,12 @@ Profiler.prototype.routes = function(callback) {
 /**
  * Request
  *
- * @param {String} url
+ * @param {String} path
  * @param {Function} callback
  */
 
-Profiler.prototype.request = function(url, callback) {
-  jsonp(this.url + url, callback);
+Profiler.prototype.request = function(path, callback) {
+  jsonp(this.host + path, callback);
 };
 
 /**
