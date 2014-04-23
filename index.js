@@ -35,9 +35,6 @@ Profiler.prototype.journey = function(opts, callback) {
   var batch = new Batch();
   var profiler = this;
 
-  // Options limit
-  opts.limit = opts.limit || this.limit;
-
   // If a profile isn't passed, retrieve the profile
   batch.push(function(done) {
     if (opts.profile) {
@@ -275,7 +272,7 @@ Profiler.prototype.patterns = function(opts, callback) {
   var profiler = this;
 
   // Get all unique pattern IDs
-  var ids = this.getUniquePatternIds(opts.profile, opts.limit);
+  var ids = this.getUniquePatternIds(opts.profile);
 
   // Load all the patterns
   each(ids, function(id) {
@@ -291,24 +288,21 @@ Profiler.prototype.patterns = function(opts, callback) {
  * Get unique pattern ids from a profile
  *
  * @param {Object} profile
- * @param {Number} limit the number of options to use
  * @return {Array} of pattern ids
  */
 
-Profiler.prototype.getUniquePatternIds = function(profile, limit) {
+Profiler.prototype.getUniquePatternIds = function(profile) {
   var ids = [];
 
   // Iterate over each option and add the pattern if it does not already exist
   each(profile.options, function(option, index) {
-    if (index < limit) {
-      each(option.segments, function(segment) {
-        each(segment.segmentPatterns, function(pattern) {
-          if (ids.indexOf(pattern.patternId) === -1) {
-            ids.push(pattern.patternId);
-          }
-        });
+    each(option.segments, function(segment) {
+      each(segment.segmentPatterns, function(pattern) {
+        if (ids.indexOf(pattern.patternId) === -1) {
+          ids.push(pattern.patternId);
+        }
       });
-    }
+    });
   });
 
   return ids;
@@ -337,6 +331,13 @@ Profiler.prototype.profile = function(params, callback) {
   qs.from = params.from.lat + ',' + params.from.lon;
   qs.to = params.to.lat + ',' + params.to.lon;
 
+  // Options limit
+  qs.limit = qs.limit || this.limit;
+
+  // Remove invalid options
+  delete qs.profile;
+
+  // Request the profile
   this.request('/profile?' + stringify(qs), callback);
 };
 

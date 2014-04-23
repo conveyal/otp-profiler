@@ -13,7 +13,6 @@ mocha.timeout('10s');
  */
 
 var config = {
-  maxOptions: 1,
   fromLocation: {
     name: 'Start',
     lat: 38.895,
@@ -40,7 +39,7 @@ describe('otpprofiler.js', function() {
   describe('#profile()', function() {
     it('should request a profile correctly', function(done) {
       var profiler = new Profiler({
-        url: endpoint
+        host: endpoint
       });
 
       profiler.profile({
@@ -48,6 +47,7 @@ describe('otpprofiler.js', function() {
         to: config.toLocation
       }, function(err, results) {
         assert.deepEqual(results, PROFILE);
+        assert(results.options.length === 3);
         done(err);
       });
     });
@@ -56,7 +56,7 @@ describe('otpprofiler.js', function() {
   describe('#routes()', function() {
     it('should request all of the available routes', function(done) {
       var profiler = new Profiler({
-        url: endpoint
+        host: endpoint
       });
 
       profiler.routes(function(err, results) {
@@ -69,7 +69,7 @@ describe('otpprofiler.js', function() {
   describe('#journey()', function() {
     it('should request patterns for a given O/D journey', function(done) {
       var profiler = new Profiler({
-        url: endpoint,
+        host: endpoint,
         limit: 1
       });
 
@@ -273,12 +273,12 @@ var PROFILE = {
         'num': 7
       },
       'segmentPatterns': [{
-        'patternId': '4ea4f68f',
+        'patternId': '1fc73205',
         'fromIndex': 24,
         'toIndex': 28,
         'nTrips': 10
       }, {
-        'patternId': '30374e9f',
+        'patternId': '4ea4f68f',
         'fromIndex': 13,
         'toIndex': 17,
         'nTrips': 8
@@ -292,72 +292,6 @@ var PROFILE = {
       'num': 1
     },
     'summary': 'routes 3Y, 922 via NW I ST & NW 14TH ST'
-  }, {
-    'segments': [{
-      'walkTime': 300,
-      'walkDistance': 420,
-      'waitStats': {
-        'min': 0,
-        'avg': 724,
-        'max': 1806,
-        'num': 6918
-      },
-      'route': '80',
-      'from': '27247',
-      'to': '27403',
-      'fromName': 'RT 29 LEE HWY & HIGHLAND ST',
-      'toName': 'K ST NW & 14TH ST NW (MAIN)',
-      'routeShortName': '3Y',
-      'routeLongName': null,
-      'rideStats': {
-        'min': 1260,
-        'avg': 1542,
-        'max': 1878,
-        'num': 3
-      },
-      'segmentPatterns': [{
-        'patternId': '67407f4a',
-        'fromIndex': 21,
-        'toIndex': 38,
-        'nTrips': 6
-      }]
-    }, {
-      'walkTime': 14,
-      'walkDistance': 20,
-      'waitStats': {
-        'min': 124,
-        'avg': 124,
-        'max': 124,
-        'num': 8
-      },
-      'route': '176',
-      'from': '5652',
-      'to': '13414',
-      'fromName': 'NW K ST & NW 14TH ST',
-      'toName': 'UNION STATION / PARKING MEZZANINE LEVEL',
-      'routeShortName': 'DCWE',
-      'routeLongName': 'DC Circulator: Georgetown-Union Station',
-      'rideStats': {
-        'min': 1002,
-        'avg': 1002,
-        'max': 1002,
-        'num': 8
-      },
-      'segmentPatterns': [{
-        'patternId': '1ce9336e',
-        'fromIndex': 15,
-        'toIndex': 22,
-        'nTrips': 170
-      }]
-    }],
-    'finalWalkTime': 446,
-    'stats': {
-      'min': 3146,
-      'avg': 3840,
-      'max': 5570,
-      'num': 1
-    },
-    'summary': 'routes 3Y, DCWE via K ST NW & 14TH ST NW (MAIN)'
   }]
 };
 
@@ -534,17 +468,17 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': 'DC',
-  'id': '132',
-  'shortName': 'A42',
-  'longName': null,
-  'mode': 'BUS',
-  'color': null
-}, {
   'agency': '1',
   'id': '1_53W',
   'shortName': '53W',
   'longName': 'Westover Loop',
+  'mode': 'BUS',
+  'color': null
+}, {
+  'agency': 'DC',
+  'id': '132',
+  'shortName': 'A42',
+  'longName': null,
   'mode': 'BUS',
   'color': null
 }, {
@@ -898,19 +832,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': 'DC',
-  'id': '110',
-  'shortName': '84',
-  'longName': null,
-  'mode': 'BUS',
-  'color': null
-}, {
   'agency': 'MCRO',
   'id': '2847',
   'shortName': '13',
   'longName': 'Silver Spring-Takoma',
   'mode': 'BUS',
   'color': '0000FF'
+}, {
+  'agency': 'DC',
+  'id': '110',
+  'shortName': '84',
+  'longName': null,
+  'mode': 'BUS',
+  'color': null
 }, {
   'agency': 'MCRO',
   'id': '2846',
@@ -1010,19 +944,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '0000FF'
 }, {
-  'agency': '1',
-  'id': '1_77',
-  'shortName': '77',
-  'longName': 'Shirlington-Lyon Park-Court House',
-  'mode': 'BUS',
-  'color': null
-}, {
   'agency': 'MCRO',
   'id': '2873',
   'shortName': '42',
   'longName': 'Montgomery Mall-White Flint',
   'mode': 'BUS',
   'color': 'A6CAF0'
+}, {
+  'agency': '1',
+  'id': '1_77',
+  'shortName': '77',
+  'longName': 'Shirlington-Lyon Park-Court House',
+  'mode': 'BUS',
+  'color': null
 }, {
   'agency': 'DC',
   'id': '222',
@@ -1528,19 +1462,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '800080'
 }, {
-  'agency': 'DC',
-  'id': '200',
-  'shortName': 'H3',
-  'longName': null,
-  'mode': 'BUS',
-  'color': null
-}, {
   'agency': 'MCRO',
   'id': '2895',
   'shortName': '66',
   'longName': 'Shady Grove-Traville Transit Center',
   'mode': 'BUS',
   'color': '8080C0'
+}, {
+  'agency': 'DC',
+  'id': '200',
+  'shortName': 'H3',
+  'longName': null,
+  'mode': 'BUS',
+  'color': null
 }, {
   'agency': 'DC',
   'id': '201',
@@ -1703,19 +1637,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': '1',
-  'id': '1_84',
-  'shortName': '84',
-  'longName': 'Douglas Park-Nauck-Pentagon City',
-  'mode': 'BUS',
-  'color': null
-}, {
   'agency': 'MCRO',
   'id': '2888',
   'shortName': '58',
   'longName': 'Shady Grove-Lakeforest',
   'mode': 'BUS',
   'color': '804000'
+}, {
+  'agency': '1',
+  'id': '1_84',
+  'shortName': '84',
+  'longName': 'Douglas Park-Nauck-Pentagon City',
+  'mode': 'BUS',
+  'color': null
 }, {
   'agency': 'MCRO',
   'id': '2886',
@@ -2186,19 +2120,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '808000'
 }, {
-  'agency': 'MCRO',
-  'id': '2738',
-  'shortName': '2',
-  'longName': 'Silver Spring-Lyttonsville',
-  'mode': 'BUS',
-  'color': 'C0DCC0'
-}, {
   'agency': '1',
   'id': '6725',
   'shortName': '995',
   'longName': 'CLARKSVILLE - WASHINGTON',
   'mode': 'BUS',
   'color': 'A6CAF0'
+}, {
+  'agency': 'MCRO',
+  'id': '2738',
+  'shortName': '2',
+  'longName': 'Silver Spring-Lyttonsville',
+  'mode': 'BUS',
+  'color': 'C0DCC0'
 }, {
   'agency': 'MCRO',
   'id': '2739',
@@ -2249,19 +2183,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': 'A6CAF0'
 }, {
-  'agency': 'MCRO',
-  'id': '2910',
-  'shortName': '97',
-  'longName': 'Germantown Transit-Gunners Lake',
-  'mode': 'BUS',
-  'color': '400040'
-}, {
   'agency': '1',
   'id': '6710',
   'shortName': '64X',
   'longName': 'NORTH AVE - RIVIERA BEACH EXPRESS',
   'mode': 'BUS',
   'color': 'FF0000'
+}, {
+  'agency': 'MCRO',
+  'id': '2910',
+  'shortName': '97',
+  'longName': 'Germantown Transit-Gunners Lake',
+  'mode': 'BUS',
+  'color': '400040'
 }, {
   'agency': 'MCRO',
   'id': '2911',
@@ -2543,19 +2477,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': '1',
-  'id': '6610',
-  'shortName': '922',
-  'longName': 'KENT ISLAND - WASHINGTON',
-  'mode': 'BUS',
-  'color': 'A6CAF0'
-}, {
   'agency': 'DC',
   'id': '50',
   'shortName': '25A',
   'longName': null,
   'mode': 'BUS',
   'color': null
+}, {
+  'agency': '1',
+  'id': '6610',
+  'shortName': '922',
+  'longName': 'KENT ISLAND - WASHINGTON',
+  'mode': 'BUS',
+  'color': 'A6CAF0'
 }, {
   'agency': '1',
   'id': '6614',
@@ -3314,18 +3248,18 @@ var ROUTES = [{
   'color': 'FFFFFF'
 }, {
   'agency': 'Fairfax Connector',
-  'id': '4482',
-  'shortName': '551',
-  'longName': '551',
-  'mode': 'BUS',
-  'color': 'FFFFFF'
-}, {
-  'agency': 'Fairfax Connector',
   'id': '4530',
   'shortName': '632',
   'longName': 'WESTFIELDS',
   'mode': 'BUS',
   'color': '00FFFF'
+}, {
+  'agency': 'Fairfax Connector',
+  'id': '4482',
+  'shortName': '551',
+  'longName': '551',
+  'mode': 'BUS',
+  'color': 'FFFFFF'
 }, {
   'agency': '1',
   'id': '6697',
@@ -3335,18 +3269,18 @@ var ROUTES = [{
   'color': 'A6CAF0'
 }, {
   'agency': 'Fairfax Connector',
-  'id': '4531',
-  'shortName': '301',
-  'longName': 'Hayfield - Telegraph Rd Line',
-  'mode': 'BUS',
-  'color': 'FF8000'
-}, {
-  'agency': 'Fairfax Connector',
   'id': '4483',
   'shortName': '552',
   'longName': '552',
   'mode': 'BUS',
   'color': 'FFFFFF'
+}, {
+  'agency': 'Fairfax Connector',
+  'id': '4531',
+  'shortName': '301',
+  'longName': 'Hayfield - Telegraph Rd Line',
+  'mode': 'BUS',
+  'color': 'FF8000'
 }, {
   'agency': 'Fairfax Connector',
   'id': '4480',
@@ -3404,19 +3338,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': '1',
-  'id': '6553',
-  'shortName': '040',
-  'longName': 'SECURITY SQ. / MIDDLE RIVER.',
-  'mode': 'BUS',
-  'color': 'FFFF00'
-}, {
   'agency': 'MCRO',
   'id': '2793',
   'shortName': '61',
   'longName': 'Shady Grove-Germantown Transit',
   'mode': 'BUS',
   'color': '000080'
+}, {
+  'agency': '1',
+  'id': '6553',
+  'shortName': '040',
+  'longName': 'SECURITY SQ. / MIDDLE RIVER.',
+  'mode': 'BUS',
+  'color': 'FFFF00'
 }, {
   'agency': '1',
   'id': '6550',
@@ -3460,19 +3394,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '00FFFF'
 }, {
-  'agency': '1',
-  'id': '6549',
-  'shortName': '035',
-  'longName': 'WHITEMARSH P&R - UMBC / BLIND IND.',
-  'mode': 'BUS',
-  'color': '0000FF'
-}, {
   'agency': 'DC',
   'id': '259',
   'shortName': 'S4',
   'longName': null,
   'mode': 'BUS',
   'color': null
+}, {
+  'agency': '1',
+  'id': '6549',
+  'shortName': '035',
+  'longName': 'WHITEMARSH P&R - UMBC / BLIND IND.',
+  'mode': 'BUS',
+  'color': '0000FF'
 }, {
   'agency': 'MCRO',
   'id': '2784',
@@ -3740,6 +3674,13 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
+  'agency': 'MCRO',
+  'id': '2795',
+  'shortName': '64',
+  'longName': 'Shady Grove-Montgomery Village',
+  'mode': 'BUS',
+  'color': '008080'
+}, {
   'agency': '1',
   'id': '6559',
   'shortName': '051',
@@ -3754,12 +3695,12 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': 'MCRO',
-  'id': '2795',
-  'shortName': '64',
-  'longName': 'Shady Grove-Montgomery Village',
+  'agency': 'DC',
+  'id': '264',
+  'shortName': 'TAGS',
+  'longName': 'Springfield Circulator-Metro Park Shuttle',
   'mode': 'BUS',
-  'color': '008080'
+  'color': null
 }, {
   'agency': '1',
   'id': '6558',
@@ -3767,13 +3708,6 @@ var ROUTES = [{
   'longName': 'BELAIR EDISON SHUTTLE',
   'mode': 'BUS',
   'color': '0000FF'
-}, {
-  'agency': 'DC',
-  'id': '264',
-  'shortName': 'TAGS',
-  'longName': 'Springfield Circulator-Metro Park Shuttle',
-  'mode': 'BUS',
-  'color': null
 }, {
   'agency': 'Fairfax Connector',
   'id': '4467',
@@ -3810,19 +3744,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '0000FF'
 }, {
-  'agency': '1',
-  'id': '6676',
-  'shortName': '061',
-  'longName': 'BELLEMORE - CHARLES AND PRATT',
-  'mode': 'BUS',
-  'color': '0000FF'
-}, {
   'agency': 'Fairfax Connector',
   'id': '4461',
   'shortName': '321',
   'longName': 'Greater Springfield Circulator',
   'mode': 'BUS',
   'color': '00FFFF'
+}, {
+  'agency': '1',
+  'id': '6676',
+  'shortName': '061',
+  'longName': 'BELLEMORE - CHARLES AND PRATT',
+  'mode': 'BUS',
+  'color': '0000FF'
 }, {
   'agency': '1',
   'id': '6673',
@@ -4062,19 +3996,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '0000FF'
 }, {
-  'agency': '1',
-  'id': '6666',
-  'shortName': '052',
-  'longName': 'MILFORD MILL RD-MONDAWMIN STAT',
-  'mode': 'BUS',
-  'color': '0000FF'
-}, {
   'agency': 'Fairfax Connector',
   'id': '4459',
   'shortName': '306',
   'longName': 'GMU Line',
   'mode': 'BUS',
   'color': 'FFFFFF'
+}, {
+  'agency': '1',
+  'id': '6666',
+  'shortName': '052',
+  'longName': 'MILFORD MILL RD-MONDAWMIN STAT',
+  'mode': 'BUS',
+  'color': '0000FF'
 }, {
   'agency': '1',
   'id': '6684',
@@ -4090,19 +4024,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': 'FF0000'
 }, {
-  'agency': 'Fairfax Connector',
-  'id': '4450',
-  'shortName': '152',
-  'longName': 'Richmond Hwy Line',
-  'mode': 'BUS',
-  'color': '0080FF'
-}, {
   'agency': '1',
   'id': '6687',
   'shortName': '10X',
   'longName': 'ROLLING ROAD - DOWNTOWN EXPRESS',
   'mode': 'BUS',
   'color': 'FF0000'
+}, {
+  'agency': 'Fairfax Connector',
+  'id': '4450',
+  'shortName': '152',
+  'longName': 'Richmond Hwy Line',
+  'mode': 'BUS',
+  'color': '0080FF'
 }, {
   'agency': '1',
   'id': '6680',
@@ -4133,6 +4067,13 @@ var ROUTES = [{
   'color': 'C0C0C0'
 }, {
   'agency': '1',
+  'id': '6580',
+  'shortName': '104',
+  'longName': 'CROMWELL BRIDGE - JOHNS HOPKINS',
+  'mode': 'BUS',
+  'color': 'FF0000'
+}, {
+  'agency': '1',
   'id': '6683',
   'shortName': '099',
   'longName': 'OLD COURT - BWI AIRPORT',
@@ -4145,13 +4086,6 @@ var ROUTES = [{
   'longName': 'Huntington - Lorton Line',
   'mode': 'BUS',
   'color': '800080'
-}, {
-  'agency': '1',
-  'id': '6580',
-  'shortName': '104',
-  'longName': 'CROMWELL BRIDGE - JOHNS HOPKINS',
-  'mode': 'BUS',
-  'color': 'FF0000'
 }, {
   'agency': '1',
   'id': '6581',
@@ -4188,19 +4122,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': '1',
-  'id': '6586',
-  'shortName': '19X',
-  'longName': 'STATE CTR. - CARNEY/GOUCHER BLV EXP',
-  'mode': 'BUS',
-  'color': 'FF0000'
-}, {
   'agency': 'DC',
   'id': '241',
   'shortName': 'Q2',
   'longName': null,
   'mode': 'BUS',
   'color': null
+}, {
+  'agency': '1',
+  'id': '6586',
+  'shortName': '19X',
+  'longName': 'STATE CTR. - CARNEY/GOUCHER BLV EXP',
+  'mode': 'BUS',
+  'color': 'FF0000'
 }, {
   'agency': '1',
   'id': '6587',
@@ -4293,19 +4227,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '0080FF'
 }, {
-  'agency': 'Fairfax Connector',
-  'id': '4448',
-  'shortName': '109',
-  'longName': 'Huntington - Rose Hill Loop',
-  'mode': 'BUS',
-  'color': '00FF00'
-}, {
   'agency': '1',
   'id': '6677',
   'shortName': '064',
   'longName': 'NORTH AVE - CURTIS BAY / ENERGY PKY',
   'mode': 'BUS',
   'color': '0000FF'
+}, {
+  'agency': 'Fairfax Connector',
+  'id': '4448',
+  'shortName': '109',
+  'longName': 'Huntington - Rose Hill Loop',
+  'mode': 'BUS',
+  'color': '00FF00'
 }, {
   'agency': '1',
   'id': '6679',
@@ -4405,19 +4339,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': 'DC',
-  'id': '94',
-  'shortName': '74',
-  'longName': null,
-  'mode': 'BUS',
-  'color': null
-}, {
   'agency': '1',
   'id': '6654',
   'shortName': '033',
   'longName': 'ROGERS STATION - MORAVIA',
   'mode': 'BUS',
   'color': '0000FF'
+}, {
+  'agency': 'DC',
+  'id': '94',
+  'shortName': '74',
+  'longName': null,
+  'mode': 'BUS',
+  'color': null
 }, {
   'agency': '1',
   'id': '6653',
@@ -4587,13 +4521,6 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': '1',
-  'id': '6656',
-  'shortName': '036',
-  'longName': 'NORTHERN PKWY & YORK - RIVERVIEW',
-  'mode': 'BUS',
-  'color': '0000FF'
-}, {
   'agency': 'DC',
   'id': '105',
   'shortName': '7Y',
@@ -4601,12 +4528,12 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
-  'agency': 'DC',
-  'id': '104',
-  'shortName': '7X',
-  'longName': null,
+  'agency': '1',
+  'id': '6656',
+  'shortName': '036',
+  'longName': 'NORTHERN PKWY & YORK - RIVERVIEW',
   'mode': 'BUS',
-  'color': null
+  'color': '0000FF'
 }, {
   'agency': '1',
   'id': '6657',
@@ -4614,6 +4541,13 @@ var ROUTES = [{
   'longName': 'NORTH BEND-COLD SPRING & GRANDVIEW',
   'mode': 'BUS',
   'color': '0000FF'
+}, {
+  'agency': 'DC',
+  'id': '104',
+  'shortName': '7X',
+  'longName': null,
+  'mode': 'BUS',
+  'color': null
 }, {
   'agency': 'DC',
   'id': '103',
@@ -4867,6 +4801,13 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': null
 }, {
+  'agency': '1',
+  'id': '6529',
+  'shortName': '009',
+  'longName': 'LUTHERVILLE-INTERNATIONAL CIRCLE',
+  'mode': 'BUS',
+  'color': '0000FF'
+}, {
   'agency': 'Fairfax Connector',
   'id': '4509',
   'shortName': '929',
@@ -4880,13 +4821,6 @@ var ROUTES = [{
   'longName': null,
   'mode': 'BUS',
   'color': null
-}, {
-  'agency': '1',
-  'id': '6529',
-  'shortName': '009',
-  'longName': 'LUTHERVILLE-INTERNATIONAL CIRCLE',
-  'mode': 'BUS',
-  'color': '0000FF'
 }, {
   'agency': '1',
   'id': '6527',
@@ -4958,19 +4892,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '0000FF'
 }, {
-  'agency': '1',
-  'id': '6544',
-  'shortName': '024',
-  'longName': 'WHISPERING WOODS - MORAVIA',
-  'mode': 'BUS',
-  'color': '0000FF'
-}, {
   'agency': 'Fairfax Connector',
   'id': '4490',
   'shortName': '595',
   'longName': 'Pentagon Express',
   'mode': 'BUS',
   'color': '00FFFF'
+}, {
+  'agency': '1',
+  'id': '6544',
+  'shortName': '024',
+  'longName': 'WHISPERING WOODS - MORAVIA',
+  'mode': 'BUS',
+  'color': '0000FF'
 }, {
   'agency': 'DC',
   'id': '283',
@@ -5007,19 +4941,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': 'FFFFFF'
 }, {
-  'agency': 'Fairfax Connector',
-  'id': '4491',
-  'shortName': '597',
-  'longName': 'Crystal City Express',
-  'mode': 'BUS',
-  'color': '00FFFF'
-}, {
   'agency': '1',
   'id': '6640',
   'shortName': '014',
   'longName': 'UMTC/PATAPSCO - ANNAPOLIS',
   'mode': 'BUS',
   'color': '0000FF'
+}, {
+  'agency': 'Fairfax Connector',
+  'id': '4491',
+  'shortName': '597',
+  'longName': 'Crystal City Express',
+  'mode': 'BUS',
+  'color': '00FFFF'
 }, {
   'agency': '1',
   'id': '6643',
@@ -5035,13 +4969,6 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '0000FF'
 }, {
-  'agency': 'Fairfax Connector',
-  'id': '4514',
-  'shortName': '981',
-  'longName': 'TWP - Dulles Airport',
-  'mode': 'BUS',
-  'color': 'FFFF00'
-}, {
   'agency': '1',
   'id': '6637',
   'shortName': '011',
@@ -5050,11 +4977,32 @@ var ROUTES = [{
   'color': '0000FF'
 }, {
   'agency': 'Fairfax Connector',
+  'id': '4514',
+  'shortName': '981',
+  'longName': 'TWP - Dulles Airport',
+  'mode': 'BUS',
+  'color': 'FFFF00'
+}, {
+  'agency': 'Fairfax Connector',
   'id': '4488',
   'shortName': '574',
   'longName': '574',
   'mode': 'BUS',
   'color': 'C0C0C0'
+}, {
+  'agency': 'Fairfax Connector',
+  'id': '4489',
+  'shortName': '585',
+  'longName': '585',
+  'mode': 'BUS',
+  'color': 'FFFFFF'
+}, {
+  'agency': 'Fairfax Connector',
+  'id': '4515',
+  'shortName': 'RIBS 1',
+  'longName': 'Ribs 1',
+  'mode': 'BUS',
+  'color': 'FFFFFF'
 }, {
   'agency': '1',
   'id': '6638',
@@ -5064,16 +5012,9 @@ var ROUTES = [{
   'color': '0000FF'
 }, {
   'agency': 'Fairfax Connector',
-  'id': '4515',
-  'shortName': 'RIBS 1',
-  'longName': 'Ribs 1',
-  'mode': 'BUS',
-  'color': 'FFFFFF'
-}, {
-  'agency': 'Fairfax Connector',
-  'id': '4489',
-  'shortName': '585',
-  'longName': '585',
+  'id': '4516',
+  'shortName': 'RIBS 2',
+  'longName': 'Ribs 2',
   'mode': 'BUS',
   'color': 'FFFFFF'
 }, {
@@ -5083,13 +5024,6 @@ var ROUTES = [{
   'longName': 'CANTON/FELLS POINT - WALBROOK',
   'mode': 'BUS',
   'color': '0000FF'
-}, {
-  'agency': 'Fairfax Connector',
-  'id': '4516',
-  'shortName': 'RIBS 2',
-  'longName': 'Ribs 2',
-  'mode': 'BUS',
-  'color': 'FFFFFF'
 }, {
   'agency': 'Fairfax Connector',
   'id': '4517',
@@ -5210,19 +5144,19 @@ var ROUTES = [{
   'mode': 'BUS',
   'color': '0000FF'
 }, {
-  'agency': '1',
-  'id': '6538',
-  'shortName': '018',
-  'longName': 'GLEN - BAAS & TALMUDICAL',
-  'mode': 'BUS',
-  'color': '800080'
-}, {
   'agency': 'Fairfax Connector',
   'id': '4518',
   'shortName': 'RIBS 4',
   'longName': 'Ribs 4',
   'mode': 'BUS',
   'color': 'FFFFFF'
+}, {
+  'agency': '1',
+  'id': '6538',
+  'shortName': '018',
+  'longName': 'GLEN - BAAS & TALMUDICAL',
+  'mode': 'BUS',
+  'color': '800080'
 }, {
   'agency': '1',
   'id': '6539',
@@ -5243,4 +5177,813 @@ var ROUTES = [{
  * Journeys
  */
 
-var JOURNEYS = {"stops":[{"stop_id":"3666","stop_name":"N GEORGE MASON DR & LEE HW","stop_lat":38.896343,"stop_lon":-77.133643},{"stop_id":"32057","stop_name":"N GEORGE MASON DR & PATRICK HENRY DR","stop_lat":38.894329,"stop_lon":-77.131685},{"stop_id":"8100","stop_name":"PATRICK HENRY DR & N HARRISON ST","stop_lat":38.893235,"stop_lon":-77.133554},{"stop_id":"8113","stop_name":"N HARRISON ST & LEE HW","stop_lat":38.896293,"stop_lon":-77.137679},{"stop_id":"29143","stop_name":"RT 29 LEE HWY & N GREENBRIER CT","stop_lat":38.896282,"stop_lon":-77.136147},{"stop_id":"27281","stop_name":"RT 29 LEE HWY & GEORGE MASON DR","stop_lat":38.896228,"stop_lon":-77.133152},{"stop_id":"27282","stop_name":"RT 29 LEE HWY & EDISON ST","stop_lat":38.89628,"stop_lon":-77.130728},{"stop_id":"27289","stop_name":"RT 29 LEE HWY & CULPEPER ST","stop_lat":38.896389,"stop_lon":-77.126815},{"stop_id":"27309","stop_name":"RT 29 LEE HWY & GLEBE RD","stop_lat":38.897285,"stop_lon":-77.124083},{"stop_id":"27328","stop_name":"RT 29 LEE HWY & ALBEMARLE ST","stop_lat":38.897965,"stop_lon":-77.122099},{"stop_id":"27338","stop_name":"RT 29 LEE HWY & WOODROW ST","stop_lat":38.898557,"stop_lon":-77.119599},{"stop_id":"27330","stop_name":"RT 29 LEE HWY & VERMONT ST","stop_lat":38.898044,"stop_lon":-77.11645},{"stop_id":"27311","stop_name":"RT 29 LEE HWY & THOMAS ST","stop_lat":38.897433,"stop_lon":-77.115226},{"stop_id":"27302","stop_name":"RT 29 LEE HWY & UTAH ST","stop_lat":38.897132,"stop_lon":-77.114251},{"stop_id":"27300","stop_name":"RT 29 LEE HWY & STAFFORD ST","stop_lat":38.896998,"stop_lon":-77.112407},{"stop_id":"27301","stop_name":"RT 29 LEE HWY & RANDOLPH ST","stop_lat":38.896978,"stop_lon":-77.110115},{"stop_id":"27294","stop_name":"RT 29 LEE HWY & QUINCY ST","stop_lat":38.896724,"stop_lon":-77.10802},{"stop_id":"27280","stop_name":"RT 29 LEE HWY & OAKLAND ST","stop_lat":38.896249,"stop_lon":-77.106058},{"stop_id":"27266","stop_name":"RT 29 LEE HWY & MONROE ST","stop_lat":38.895833,"stop_lon":-77.104384},{"stop_id":"27277","stop_name":"RT 29 LEE HWY & #3206","stop_lat":38.896186,"stop_lon":-77.101108},{"stop_id":"27263","stop_name":"RT 29 LEE HWY & SPOUT RUN PKWY","stop_lat":38.895841,"stop_lon":-77.097472},{"stop_id":"27247","stop_name":"RT 29 LEE HWY & HIGHLAND ST","stop_lat":38.89503,"stop_lon":-77.094856},{"stop_id":"27236","stop_name":"RT 29 LEE HWY & DANVILLE ST","stop_lat":38.894556,"stop_lon":-77.092735},{"stop_id":"27239","stop_name":"RT 29 LEE HWY & CLEVELAND ST","stop_lat":38.89469,"stop_lon":-77.091399},{"stop_id":"27253","stop_name":"RT 29 LEE HWY & ADAMS ST","stop_lat":38.895342,"stop_lon":-77.088201},{"stop_id":"27268","stop_name":"RT 29 LEE HWY & VEITCH ST","stop_lat":38.895981,"stop_lon":-77.085936},{"stop_id":"27279","stop_name":"RT 29 LEE HWY & #1802-1804","stop_lat":38.896293,"stop_lon":-77.082252},{"stop_id":"27321","stop_name":"RT 29 LEE HWY & QUINN ST","stop_lat":38.897798,"stop_lon":-77.078215},{"stop_id":"27336","stop_name":"RT 29 LEE HWY & FORT MYER DR","stop_lat":38.898332,"stop_lon":-77.073047},{"stop_id":"32075","stop_name":"E ST NW & 19TH ST NW","stop_lat":38.895995,"stop_lon":-77.043466},{"stop_id":"6718","stop_name":"NW 18TH ST & NW F ST","stop_lat":38.897225,"stop_lon":-77.041623},{"stop_id":"7969","stop_name":"NW 18TH ST & NW G ST","stop_lat":38.898113,"stop_lon":-77.041589},{"stop_id":"2278","stop_name":"NW 18TH ST & NW PENNSYLVANIA AV","stop_lat":38.899316,"stop_lon":-77.041633},{"stop_id":"7970","stop_name":"NW 18TH ST & NW I ST","stop_lat":38.901415,"stop_lon":-77.041545},{"stop_id":"7971","stop_name":"NW 18TH ST & NW K ST","stop_lat":38.902492,"stop_lon":-77.041724},{"stop_id":"27405","stop_name":"K ST NW & 17TH ST NW (MAIN) WEST","stop_lat":38.902456,"stop_lon":-77.039724},{"stop_id":"27404","stop_name":"K ST NW & 16TH ST NW (MAIN)","stop_lat":38.902462,"stop_lon":-77.036823},{"stop_id":"27402","stop_name":"K ST NW & 15TH ST NW (MAIN)","stop_lat":38.902459,"stop_lon":-77.034819},{"stop_id":"27403","stop_name":"K ST NW & 14TH ST NW (MAIN)","stop_lat":38.902451,"stop_lon":-77.032186},{"stop_id":"5548","stop_name":"NW I ST & NW 14TH ST","stop_lat":38.900919,"stop_lon":-77.032087},{"stop_id":"12598","stop_name":"TERMINAL/KENNEDY CENTER;25TH ST & F ST","stop_lat":38.898099,"stop_lon":-77.053251},{"stop_id":"5498","stop_name":"NW H ST & NW 24TH ST","stop_lat":38.89953,"stop_lon":-77.051567},{"stop_id":"5499","stop_name":"NW H ST & NW 23RD ST","stop_lat":38.899527,"stop_lon":-77.050338},{"stop_id":"8050","stop_name":"NW 23RD ST & NW G ST","stop_lat":38.898486,"stop_lon":-77.050246},{"stop_id":"7061","stop_name":"NW F ST & NW 22ND ST","stop_lat":38.897296,"stop_lon":-77.049097},{"stop_id":"7062","stop_name":"NW F ST & NW 21ST ST","stop_lat":38.897299,"stop_lon":-77.046843},{"stop_id":"7449","stop_name":"NW VIRGINIA AV & NW 21ST ST","stop_lat":38.894948,"stop_lon":-77.04629},{"stop_id":"5869","stop_name":"19TH STREET & VIRGINIA AV NW","stop_lat":38.893076,"stop_lon":-77.042788},{"stop_id":"6720","stop_name":"NW 18TH ST & NW C ST","stop_lat":38.893413,"stop_lon":-77.041649},{"stop_id":"6719","stop_name":"NW 18TH ST & NW D ST","stop_lat":38.894241,"stop_lon":-77.041613},{"stop_id":"27251","stop_name":"18TH ST NW & E ST NW (S)","stop_lat":38.895236,"stop_lon":-77.041607},{"stop_id":"4756","stop_name":"NW I ST & 18TH ST","stop_lat":38.901174,"stop_lon":-77.041604},{"stop_id":"5637","stop_name":"NW K ST & NW 18TH ST","stop_lat":38.902322,"stop_lon":-77.041603},{"stop_id":"27401","stop_name":"K ST NW & 13TH ST NW (MAIN)","stop_lat":38.902437,"stop_lon":-77.029915},{"stop_id":"7675","stop_name":"NW 13TH ST & NW I ST","stop_lat":38.901497,"stop_lon":-77.029765},{"stop_id":"5506","stop_name":"NW H ST & NW 11TH ST","stop_lat":38.899735,"stop_lon":-77.027311},{"stop_id":"5490","stop_name":"NW H ST & NW 9TH ST","stop_lat":38.899741,"stop_lon":-77.024163},{"stop_id":"5489","stop_name":"NW H ST & NW 7TH ST","stop_lat":38.899724,"stop_lon":-77.021543},{"stop_id":"5488","stop_name":"NW H ST & NW 6TH ST","stop_lat":38.899738,"stop_lon":-77.020177},{"stop_id":"27357","stop_name":"H ST NW & BET 5TH ST NW & 4TH ST NW","stop_lat":38.899705,"stop_lon":-77.017114},{"stop_id":"5865","stop_name":"NW MASSACHUSETTS AV & NW NEW JERSEY AV","stop_lat":38.898908,"stop_lon":-77.012939},{"stop_id":"5864","stop_name":"NW MASSACHUSETTS AV & NW G ST","stop_lat":38.898154,"stop_lon":-77.010998},{"stop_id":"27329","stop_name":"NORTH CAPITOL ST NE & MASSACHUSETTS","stop_lat":38.898264,"stop_lon":-77.008955},{"stop_id":"27363","stop_name":"NORTH CAPITOL ST NE & H ST NE","stop_lat":38.899963,"stop_lon":-77.008952},{"stop_id":"27380","stop_name":"NORTH CAPITOL ST NE & I ST NE","stop_lat":38.901072,"stop_lon":-77.00894},{"stop_id":"27428","stop_name":"NORTH CAPITOL ST & K ST","stop_lat":38.90304,"stop_lon":-77.008927},{"stop_id":"27452","stop_name":"NORTH CAPITOL ST & M ST","stop_lat":38.905457,"stop_lon":-77.008889},{"stop_id":"27468","stop_name":"NORTH CAPITOL ST NE & N ST NE","stop_lat":38.907085,"stop_lon":-77.008888},{"stop_id":"28810","stop_name":"NORTH CAPITOL ST & P ST","stop_lat":38.909449,"stop_lon":-77.008936},{"stop_id":"27506","stop_name":"NORTH CAPITOL ST NE & FLORIDA AVE N","stop_lat":38.910439,"stop_lon":-77.008894},{"stop_id":"27547","stop_name":"NORTH CAPITOL ST & RANDOLPH PL","stop_lat":38.913184,"stop_lon":-77.008933},{"stop_id":"27563","stop_name":"NORTH CAPITOL ST & T ST","stop_lat":38.915352,"stop_lon":-77.008871},{"stop_id":"27573","stop_name":"NORTH CAPITOL ST & RHODE ISLAND AVE","stop_lat":38.916648,"stop_lon":-77.008863},{"stop_id":"27586","stop_name":"NORTH CAPITOL ST & V ST","stop_lat":38.91838,"stop_lon":-77.008839},{"stop_id":"27608","stop_name":"NORTH CAPITOL ST & ADAMS ST","stop_lat":38.920347,"stop_lon":-77.008847},{"stop_id":"27623","stop_name":"NORTH CAPITOL ST & BRYANT ST NE","stop_lat":38.921191,"stop_lon":-77.008913},{"stop_id":"27632","stop_name":"NORTH CAPITOL ST & CHANNING ST NE","stop_lat":38.922241,"stop_lon":-77.008909},{"stop_id":"27656","stop_name":"NORTH CAPITOL ST & EVARTS ST","stop_lat":38.924321,"stop_lon":-77.008904},{"stop_id":"28885","stop_name":"MICHIGAN AVE NE & NORTH CAPITOL ST","stop_lat":38.926664,"stop_lon":-77.008234},{"stop_id":"5918","stop_name":"NE MICHIGAN AV & NE FRANKLIN ST","stop_lat":38.927223,"stop_lon":-77.005676},{"stop_id":"5919","stop_name":"NE MICHIGAN AV & NE IRVING ST","stop_lat":38.93018,"stop_lon":-77.002742},{"stop_id":"5920","stop_name":"NE MICHIGAN AV & NE 4TH ST","stop_lat":38.931618,"stop_lon":-76.999798},{"stop_id":"7455","stop_name":"NE 7TH ST & NE MONROE ST","stop_lat":38.932298,"stop_lon":-76.996375},{"stop_id":"6049","stop_name":"NE MONROE ST & NE 8TH ST","stop_lat":38.932298,"stop_lon":-76.995156},{"stop_id":"27780","stop_name":"BROOKLAND STATION & BUS BAY E","stop_lat":38.933424,"stop_lon":-76.993911},{"stop_id":"6050","stop_name":"NE MONROE ST & NE 10TH ST","stop_lat":38.932372,"stop_lon":-76.992844},{"stop_id":"27783","stop_name":"12TH ST & NEWTON ST","stop_lat":38.933339,"stop_lon":-76.990988},{"stop_id":"7641","stop_name":"NE 12TH ST & NE OTIS ST","stop_lat":38.934295,"stop_lon":-76.991063},{"stop_id":"7642","stop_name":"NE 12TH ST & NE PERRY ST","stop_lat":38.93594,"stop_lon":-76.990958},{"stop_id":"7658","stop_name":"NE 12TH ST & NE QUINCY ST","stop_lat":38.937584,"stop_lon":-76.990403},{"stop_id":"7657","stop_name":"NE 12TH ST & NE MICHIGAN AV","stop_lat":38.939242,"stop_lon":-76.990168},{"stop_id":"7645","stop_name":"NE 12TH ST & NE TAYLOR ST","stop_lat":38.940979,"stop_lon":-76.990168},{"stop_id":"7653","stop_name":"PROVIDENCE HOSP;NE 12TH ST & VARNUM ST","stop_lat":38.943138,"stop_lon":-76.990169},{"stop_id":"7648","stop_name":"NE 12TH ST & NE ALLISON ST","stop_lat":38.945511,"stop_lon":-76.99017},{"stop_id":"7649","stop_name":"NE 12TH ST & NE CRITTENDEN ST","stop_lat":38.947166,"stop_lon":-76.990161},{"stop_id":"6815","stop_name":"NE SOUTH DAKOTA AV & NE DECATUR ST","stop_lat":38.948178,"stop_lon":-76.990872},{"stop_id":"27970","stop_name":"SOUTH DAKOTA AVE NE & 10TH ST NE","stop_lat":38.949564,"stop_lon":-76.992685},{"stop_id":"27986","stop_name":"SOUTH DAKOTA AVE & 8TH ST","stop_lat":38.950737,"stop_lon":-76.994222},{"stop_id":"6811","stop_name":"NE SOUTH DAKOTA AV & NE FARRAGUT PL","stop_lat":38.951493,"stop_lon":-76.995201},{"stop_id":"5369","stop_name":"NE GALLOWAY ST & NE SOUTH DAKOTA AV","stop_lat":38.952663,"stop_lon":-76.997401},{"stop_id":"10793","stop_name":"4TH ST & GALLOWAY ST NE","stop_lat":38.952636,"stop_lon":-76.998808},{"stop_id":"28879","stop_name":"FT TOTTEN STATION & DROP OFF ONLY (","stop_lat":38.952368,"stop_lon":-77.001852},{"stop_id":"28958","stop_name":"FT TOTTEN STATION & BUS BAY F","stop_lat":38.952368,"stop_lon":-77.001852}],"routes":[{"agency_id":"DC","route_id":"80","route_short_name":"3Y","route_long_name":null,"route_type":3,"route_color":null},{"agency_id":"DC","route_id":"106","route_short_name":"80","route_long_name":null,"route_type":3,"route_color":null}],"patterns":[{"pattern_id":"67407f4a","stops":[{"stop_id":"3666"},{"stop_id":"32057"},{"stop_id":"8100"},{"stop_id":"8113"},{"stop_id":"29143"},{"stop_id":"27281"},{"stop_id":"27282"},{"stop_id":"27289"},{"stop_id":"27309"},{"stop_id":"27328"},{"stop_id":"27338"},{"stop_id":"27330"},{"stop_id":"27311"},{"stop_id":"27302"},{"stop_id":"27300"},{"stop_id":"27301"},{"stop_id":"27294"},{"stop_id":"27280"},{"stop_id":"27266"},{"stop_id":"27277"},{"stop_id":"27263"},{"stop_id":"27247"},{"stop_id":"27236"},{"stop_id":"27239"},{"stop_id":"27253"},{"stop_id":"27268"},{"stop_id":"27279"},{"stop_id":"27321"},{"stop_id":"27336"},{"stop_id":"32075"},{"stop_id":"6718"},{"stop_id":"7969"},{"stop_id":"2278"},{"stop_id":"7970"},{"stop_id":"7971"},{"stop_id":"27405"},{"stop_id":"27404"},{"stop_id":"27402"},{"stop_id":"27403"},{"stop_id":"5548"}],"pattern_name":"3Y to NW I ST & NW 14TH ST (DC_5548)","route_id":"80"},{"pattern_id":"62e16aa0","stops":[{"stop_id":"12598"},{"stop_id":"5498"},{"stop_id":"5499"},{"stop_id":"8050"},{"stop_id":"7061"},{"stop_id":"7062"},{"stop_id":"7449"},{"stop_id":"5869"},{"stop_id":"6720"},{"stop_id":"6719"},{"stop_id":"27251"},{"stop_id":"6718"},{"stop_id":"7969"},{"stop_id":"2278"},{"stop_id":"4756"},{"stop_id":"5637"},{"stop_id":"27405"},{"stop_id":"27404"},{"stop_id":"27402"},{"stop_id":"27403"},{"stop_id":"27401"},{"stop_id":"7675"},{"stop_id":"5506"},{"stop_id":"5490"},{"stop_id":"5489"},{"stop_id":"5488"},{"stop_id":"27357"},{"stop_id":"5865"},{"stop_id":"5864"},{"stop_id":"27329"},{"stop_id":"27363"},{"stop_id":"27380"},{"stop_id":"27428"},{"stop_id":"27452"},{"stop_id":"27468"},{"stop_id":"28810"},{"stop_id":"27506"},{"stop_id":"27547"},{"stop_id":"27563"},{"stop_id":"27573"},{"stop_id":"27586"},{"stop_id":"27608"},{"stop_id":"27623"},{"stop_id":"27632"},{"stop_id":"27656"},{"stop_id":"28885"},{"stop_id":"5918"},{"stop_id":"5919"},{"stop_id":"5920"},{"stop_id":"7455"},{"stop_id":"6049"},{"stop_id":"27780"},{"stop_id":"6050"},{"stop_id":"27783"},{"stop_id":"7641"},{"stop_id":"7642"},{"stop_id":"7658"},{"stop_id":"7657"},{"stop_id":"7645"},{"stop_id":"7653"},{"stop_id":"7648"},{"stop_id":"7649"},{"stop_id":"6815"},{"stop_id":"27970"},{"stop_id":"27986"},{"stop_id":"6811"},{"stop_id":"5369"},{"stop_id":"10793"},{"stop_id":"28879"},{"stop_id":"28958"}],"pattern_name":"80 to FT TOTTEN STATION & BUS BAY F (DC_28958) from TERMINAL/KENNEDY CENTER;25TH ST & F ST (DC_12598)","route_id":"106"}],"places":[{"place_id":"from","place_name":"Start","place_lat":38.895,"place_lon":-77.09},{"place_id":"to","place_name":"End","place_lat":38.894,"place_lon":-77.01}],"journeys":[{"journey_id":"option_0","journey_name":"routes 3Y, 80 via NW 18TH ST & NW PENNSYLVANIA AV","segments":[{"type":"WALK","from":{"type":"PLACE","place_id":"from"},"to":{"type":"STOP","stop_id":"27247"}},{"type":"TRANSIT","pattern_id":"67407f4a","from_stop_index":21,"to_stop_index":32},{"type":"TRANSIT","pattern_id":"62e16aa0","from_stop_index":13,"to_stop_index":29},{"type":"WALK","from":{"type":"STOP","stop_id":"27329"},"to":{"type":"PLACE","place_id":"to"}}]}]};
+var JOURNEYS = {
+  'stops': [{
+    'stop_id': '3666',
+    'stop_name': 'N GEORGE MASON DR & LEE HW',
+    'stop_lat': 38.896343,
+    'stop_lon': -77.133643
+  }, {
+    'stop_id': '32057',
+    'stop_name': 'N GEORGE MASON DR & PATRICK HENRY DR',
+    'stop_lat': 38.894329,
+    'stop_lon': -77.131685
+  }, {
+    'stop_id': '8100',
+    'stop_name': 'PATRICK HENRY DR & N HARRISON ST',
+    'stop_lat': 38.893235,
+    'stop_lon': -77.133554
+  }, {
+    'stop_id': '8113',
+    'stop_name': 'N HARRISON ST & LEE HW',
+    'stop_lat': 38.896293,
+    'stop_lon': -77.137679
+  }, {
+    'stop_id': '29143',
+    'stop_name': 'RT 29 LEE HWY & N GREENBRIER CT',
+    'stop_lat': 38.896282,
+    'stop_lon': -77.136147
+  }, {
+    'stop_id': '27281',
+    'stop_name': 'RT 29 LEE HWY & GEORGE MASON DR',
+    'stop_lat': 38.896228,
+    'stop_lon': -77.133152
+  }, {
+    'stop_id': '27282',
+    'stop_name': 'RT 29 LEE HWY & EDISON ST',
+    'stop_lat': 38.89628,
+    'stop_lon': -77.130728
+  }, {
+    'stop_id': '27289',
+    'stop_name': 'RT 29 LEE HWY & CULPEPER ST',
+    'stop_lat': 38.896389,
+    'stop_lon': -77.126815
+  }, {
+    'stop_id': '27309',
+    'stop_name': 'RT 29 LEE HWY & GLEBE RD',
+    'stop_lat': 38.897285,
+    'stop_lon': -77.124083
+  }, {
+    'stop_id': '27328',
+    'stop_name': 'RT 29 LEE HWY & ALBEMARLE ST',
+    'stop_lat': 38.897965,
+    'stop_lon': -77.122099
+  }, {
+    'stop_id': '27338',
+    'stop_name': 'RT 29 LEE HWY & WOODROW ST',
+    'stop_lat': 38.898557,
+    'stop_lon': -77.119599
+  }, {
+    'stop_id': '27330',
+    'stop_name': 'RT 29 LEE HWY & VERMONT ST',
+    'stop_lat': 38.898044,
+    'stop_lon': -77.11645
+  }, {
+    'stop_id': '27311',
+    'stop_name': 'RT 29 LEE HWY & THOMAS ST',
+    'stop_lat': 38.897433,
+    'stop_lon': -77.115226
+  }, {
+    'stop_id': '27302',
+    'stop_name': 'RT 29 LEE HWY & UTAH ST',
+    'stop_lat': 38.897132,
+    'stop_lon': -77.114251
+  }, {
+    'stop_id': '27300',
+    'stop_name': 'RT 29 LEE HWY & STAFFORD ST',
+    'stop_lat': 38.896998,
+    'stop_lon': -77.112407
+  }, {
+    'stop_id': '27301',
+    'stop_name': 'RT 29 LEE HWY & RANDOLPH ST',
+    'stop_lat': 38.896978,
+    'stop_lon': -77.110115
+  }, {
+    'stop_id': '27294',
+    'stop_name': 'RT 29 LEE HWY & QUINCY ST',
+    'stop_lat': 38.896724,
+    'stop_lon': -77.10802
+  }, {
+    'stop_id': '27280',
+    'stop_name': 'RT 29 LEE HWY & OAKLAND ST',
+    'stop_lat': 38.896249,
+    'stop_lon': -77.106058
+  }, {
+    'stop_id': '27266',
+    'stop_name': 'RT 29 LEE HWY & MONROE ST',
+    'stop_lat': 38.895833,
+    'stop_lon': -77.104384
+  }, {
+    'stop_id': '27277',
+    'stop_name': 'RT 29 LEE HWY & #3206',
+    'stop_lat': 38.896186,
+    'stop_lon': -77.101108
+  }, {
+    'stop_id': '27263',
+    'stop_name': 'RT 29 LEE HWY & SPOUT RUN PKWY',
+    'stop_lat': 38.895841,
+    'stop_lon': -77.097472
+  }, {
+    'stop_id': '27247',
+    'stop_name': 'RT 29 LEE HWY & HIGHLAND ST',
+    'stop_lat': 38.89503,
+    'stop_lon': -77.094856
+  }, {
+    'stop_id': '27236',
+    'stop_name': 'RT 29 LEE HWY & DANVILLE ST',
+    'stop_lat': 38.894556,
+    'stop_lon': -77.092735
+  }, {
+    'stop_id': '27239',
+    'stop_name': 'RT 29 LEE HWY & CLEVELAND ST',
+    'stop_lat': 38.89469,
+    'stop_lon': -77.091399
+  }, {
+    'stop_id': '27253',
+    'stop_name': 'RT 29 LEE HWY & ADAMS ST',
+    'stop_lat': 38.895342,
+    'stop_lon': -77.088201
+  }, {
+    'stop_id': '27268',
+    'stop_name': 'RT 29 LEE HWY & VEITCH ST',
+    'stop_lat': 38.895981,
+    'stop_lon': -77.085936
+  }, {
+    'stop_id': '27279',
+    'stop_name': 'RT 29 LEE HWY & #1802-1804',
+    'stop_lat': 38.896293,
+    'stop_lon': -77.082252
+  }, {
+    'stop_id': '27321',
+    'stop_name': 'RT 29 LEE HWY & QUINN ST',
+    'stop_lat': 38.897798,
+    'stop_lon': -77.078215
+  }, {
+    'stop_id': '27336',
+    'stop_name': 'RT 29 LEE HWY & FORT MYER DR',
+    'stop_lat': 38.898332,
+    'stop_lon': -77.073047
+  }, {
+    'stop_id': '32075',
+    'stop_name': 'E ST NW & 19TH ST NW',
+    'stop_lat': 38.895995,
+    'stop_lon': -77.043466
+  }, {
+    'stop_id': '6718',
+    'stop_name': 'NW 18TH ST & NW F ST',
+    'stop_lat': 38.897225,
+    'stop_lon': -77.041623
+  }, {
+    'stop_id': '7969',
+    'stop_name': 'NW 18TH ST & NW G ST',
+    'stop_lat': 38.898113,
+    'stop_lon': -77.041589
+  }, {
+    'stop_id': '2278',
+    'stop_name': 'NW 18TH ST & NW PENNSYLVANIA AV',
+    'stop_lat': 38.899316,
+    'stop_lon': -77.041633
+  }, {
+    'stop_id': '7970',
+    'stop_name': 'NW 18TH ST & NW I ST',
+    'stop_lat': 38.901415,
+    'stop_lon': -77.041545
+  }, {
+    'stop_id': '7971',
+    'stop_name': 'NW 18TH ST & NW K ST',
+    'stop_lat': 38.902492,
+    'stop_lon': -77.041724
+  }, {
+    'stop_id': '27405',
+    'stop_name': 'K ST NW & 17TH ST NW (MAIN) WEST',
+    'stop_lat': 38.902456,
+    'stop_lon': -77.039724
+  }, {
+    'stop_id': '27404',
+    'stop_name': 'K ST NW & 16TH ST NW (MAIN)',
+    'stop_lat': 38.902462,
+    'stop_lon': -77.036823
+  }, {
+    'stop_id': '27402',
+    'stop_name': 'K ST NW & 15TH ST NW (MAIN)',
+    'stop_lat': 38.902459,
+    'stop_lon': -77.034819
+  }, {
+    'stop_id': '27403',
+    'stop_name': 'K ST NW & 14TH ST NW (MAIN)',
+    'stop_lat': 38.902451,
+    'stop_lon': -77.032186
+  }, {
+    'stop_id': '5548',
+    'stop_name': 'NW I ST & NW 14TH ST',
+    'stop_lat': 38.900919,
+    'stop_lon': -77.032087
+  }, {
+    'stop_id': '12598',
+    'stop_name': 'TERMINAL/KENNEDY CENTER;25TH ST & F ST',
+    'stop_lat': 38.898099,
+    'stop_lon': -77.053251
+  }, {
+    'stop_id': '5498',
+    'stop_name': 'NW H ST & NW 24TH ST',
+    'stop_lat': 38.89953,
+    'stop_lon': -77.051567
+  }, {
+    'stop_id': '5499',
+    'stop_name': 'NW H ST & NW 23RD ST',
+    'stop_lat': 38.899527,
+    'stop_lon': -77.050338
+  }, {
+    'stop_id': '8050',
+    'stop_name': 'NW 23RD ST & NW G ST',
+    'stop_lat': 38.898486,
+    'stop_lon': -77.050246
+  }, {
+    'stop_id': '7061',
+    'stop_name': 'NW F ST & NW 22ND ST',
+    'stop_lat': 38.897296,
+    'stop_lon': -77.049097
+  }, {
+    'stop_id': '7062',
+    'stop_name': 'NW F ST & NW 21ST ST',
+    'stop_lat': 38.897299,
+    'stop_lon': -77.046843
+  }, {
+    'stop_id': '7449',
+    'stop_name': 'NW VIRGINIA AV & NW 21ST ST',
+    'stop_lat': 38.894948,
+    'stop_lon': -77.04629
+  }, {
+    'stop_id': '5869',
+    'stop_name': '19TH STREET & VIRGINIA AV NW',
+    'stop_lat': 38.893076,
+    'stop_lon': -77.042788
+  }, {
+    'stop_id': '6720',
+    'stop_name': 'NW 18TH ST & NW C ST',
+    'stop_lat': 38.893413,
+    'stop_lon': -77.041649
+  }, {
+    'stop_id': '6719',
+    'stop_name': 'NW 18TH ST & NW D ST',
+    'stop_lat': 38.894241,
+    'stop_lon': -77.041613
+  }, {
+    'stop_id': '27251',
+    'stop_name': '18TH ST NW & E ST NW (S)',
+    'stop_lat': 38.895236,
+    'stop_lon': -77.041607
+  }, {
+    'stop_id': '4756',
+    'stop_name': 'NW I ST & 18TH ST',
+    'stop_lat': 38.901174,
+    'stop_lon': -77.041604
+  }, {
+    'stop_id': '5637',
+    'stop_name': 'NW K ST & NW 18TH ST',
+    'stop_lat': 38.902322,
+    'stop_lon': -77.041603
+  }, {
+    'stop_id': '27401',
+    'stop_name': 'K ST NW & 13TH ST NW (MAIN)',
+    'stop_lat': 38.902437,
+    'stop_lon': -77.029915
+  }, {
+    'stop_id': '7675',
+    'stop_name': 'NW 13TH ST & NW I ST',
+    'stop_lat': 38.901497,
+    'stop_lon': -77.029765
+  }, {
+    'stop_id': '5506',
+    'stop_name': 'NW H ST & NW 11TH ST',
+    'stop_lat': 38.899735,
+    'stop_lon': -77.027311
+  }, {
+    'stop_id': '5490',
+    'stop_name': 'NW H ST & NW 9TH ST',
+    'stop_lat': 38.899741,
+    'stop_lon': -77.024163
+  }, {
+    'stop_id': '5489',
+    'stop_name': 'NW H ST & NW 7TH ST',
+    'stop_lat': 38.899724,
+    'stop_lon': -77.021543
+  }, {
+    'stop_id': '5488',
+    'stop_name': 'NW H ST & NW 6TH ST',
+    'stop_lat': 38.899738,
+    'stop_lon': -77.020177
+  }, {
+    'stop_id': '27357',
+    'stop_name': 'H ST NW & BET 5TH ST NW & 4TH ST NW',
+    'stop_lat': 38.899705,
+    'stop_lon': -77.017114
+  }, {
+    'stop_id': '5865',
+    'stop_name': 'NW MASSACHUSETTS AV & NW NEW JERSEY AV',
+    'stop_lat': 38.898908,
+    'stop_lon': -77.012939
+  }, {
+    'stop_id': '5864',
+    'stop_name': 'NW MASSACHUSETTS AV & NW G ST',
+    'stop_lat': 38.898154,
+    'stop_lon': -77.010998
+  }, {
+    'stop_id': '27329',
+    'stop_name': 'NORTH CAPITOL ST NE & MASSACHUSETTS',
+    'stop_lat': 38.898264,
+    'stop_lon': -77.008955
+  }, {
+    'stop_id': '27363',
+    'stop_name': 'NORTH CAPITOL ST NE & H ST NE',
+    'stop_lat': 38.899963,
+    'stop_lon': -77.008952
+  }, {
+    'stop_id': '27380',
+    'stop_name': 'NORTH CAPITOL ST NE & I ST NE',
+    'stop_lat': 38.901072,
+    'stop_lon': -77.00894
+  }, {
+    'stop_id': '27428',
+    'stop_name': 'NORTH CAPITOL ST & K ST',
+    'stop_lat': 38.90304,
+    'stop_lon': -77.008927
+  }, {
+    'stop_id': '27452',
+    'stop_name': 'NORTH CAPITOL ST & M ST',
+    'stop_lat': 38.905457,
+    'stop_lon': -77.008889
+  }, {
+    'stop_id': '27468',
+    'stop_name': 'NORTH CAPITOL ST NE & N ST NE',
+    'stop_lat': 38.907085,
+    'stop_lon': -77.008888
+  }, {
+    'stop_id': '28810',
+    'stop_name': 'NORTH CAPITOL ST & P ST',
+    'stop_lat': 38.909449,
+    'stop_lon': -77.008936
+  }, {
+    'stop_id': '27506',
+    'stop_name': 'NORTH CAPITOL ST NE & FLORIDA AVE N',
+    'stop_lat': 38.910439,
+    'stop_lon': -77.008894
+  }, {
+    'stop_id': '27547',
+    'stop_name': 'NORTH CAPITOL ST & RANDOLPH PL',
+    'stop_lat': 38.913184,
+    'stop_lon': -77.008933
+  }, {
+    'stop_id': '27563',
+    'stop_name': 'NORTH CAPITOL ST & T ST',
+    'stop_lat': 38.915352,
+    'stop_lon': -77.008871
+  }, {
+    'stop_id': '27573',
+    'stop_name': 'NORTH CAPITOL ST & RHODE ISLAND AVE',
+    'stop_lat': 38.916648,
+    'stop_lon': -77.008863
+  }, {
+    'stop_id': '27586',
+    'stop_name': 'NORTH CAPITOL ST & V ST',
+    'stop_lat': 38.91838,
+    'stop_lon': -77.008839
+  }, {
+    'stop_id': '27608',
+    'stop_name': 'NORTH CAPITOL ST & ADAMS ST',
+    'stop_lat': 38.920347,
+    'stop_lon': -77.008847
+  }, {
+    'stop_id': '27623',
+    'stop_name': 'NORTH CAPITOL ST & BRYANT ST NE',
+    'stop_lat': 38.921191,
+    'stop_lon': -77.008913
+  }, {
+    'stop_id': '27632',
+    'stop_name': 'NORTH CAPITOL ST & CHANNING ST NE',
+    'stop_lat': 38.922241,
+    'stop_lon': -77.008909
+  }, {
+    'stop_id': '27656',
+    'stop_name': 'NORTH CAPITOL ST & EVARTS ST',
+    'stop_lat': 38.924321,
+    'stop_lon': -77.008904
+  }, {
+    'stop_id': '28885',
+    'stop_name': 'MICHIGAN AVE NE & NORTH CAPITOL ST',
+    'stop_lat': 38.926664,
+    'stop_lon': -77.008234
+  }, {
+    'stop_id': '5918',
+    'stop_name': 'NE MICHIGAN AV & NE FRANKLIN ST',
+    'stop_lat': 38.927223,
+    'stop_lon': -77.005676
+  }, {
+    'stop_id': '5919',
+    'stop_name': 'NE MICHIGAN AV & NE IRVING ST',
+    'stop_lat': 38.93018,
+    'stop_lon': -77.002742
+  }, {
+    'stop_id': '5920',
+    'stop_name': 'NE MICHIGAN AV & NE 4TH ST',
+    'stop_lat': 38.931618,
+    'stop_lon': -76.999798
+  }, {
+    'stop_id': '7455',
+    'stop_name': 'NE 7TH ST & NE MONROE ST',
+    'stop_lat': 38.932298,
+    'stop_lon': -76.996375
+  }, {
+    'stop_id': '6049',
+    'stop_name': 'NE MONROE ST & NE 8TH ST',
+    'stop_lat': 38.932298,
+    'stop_lon': -76.995156
+  }, {
+    'stop_id': '27780',
+    'stop_name': 'BROOKLAND STATION & BUS BAY E',
+    'stop_lat': 38.933424,
+    'stop_lon': -76.993911
+  }, {
+    'stop_id': '6050',
+    'stop_name': 'NE MONROE ST & NE 10TH ST',
+    'stop_lat': 38.932372,
+    'stop_lon': -76.992844
+  }, {
+    'stop_id': '27783',
+    'stop_name': '12TH ST & NEWTON ST',
+    'stop_lat': 38.933339,
+    'stop_lon': -76.990988
+  }, {
+    'stop_id': '7641',
+    'stop_name': 'NE 12TH ST & NE OTIS ST',
+    'stop_lat': 38.934295,
+    'stop_lon': -76.991063
+  }, {
+    'stop_id': '7642',
+    'stop_name': 'NE 12TH ST & NE PERRY ST',
+    'stop_lat': 38.93594,
+    'stop_lon': -76.990958
+  }, {
+    'stop_id': '7658',
+    'stop_name': 'NE 12TH ST & NE QUINCY ST',
+    'stop_lat': 38.937584,
+    'stop_lon': -76.990403
+  }, {
+    'stop_id': '7657',
+    'stop_name': 'NE 12TH ST & NE MICHIGAN AV',
+    'stop_lat': 38.939242,
+    'stop_lon': -76.990168
+  }, {
+    'stop_id': '7645',
+    'stop_name': 'NE 12TH ST & NE TAYLOR ST',
+    'stop_lat': 38.940979,
+    'stop_lon': -76.990168
+  }, {
+    'stop_id': '7653',
+    'stop_name': 'PROVIDENCE HOSP;NE 12TH ST & VARNUM ST',
+    'stop_lat': 38.943138,
+    'stop_lon': -76.990169
+  }, {
+    'stop_id': '7648',
+    'stop_name': 'NE 12TH ST & NE ALLISON ST',
+    'stop_lat': 38.945511,
+    'stop_lon': -76.99017
+  }, {
+    'stop_id': '7649',
+    'stop_name': 'NE 12TH ST & NE CRITTENDEN ST',
+    'stop_lat': 38.947166,
+    'stop_lon': -76.990161
+  }, {
+    'stop_id': '6815',
+    'stop_name': 'NE SOUTH DAKOTA AV & NE DECATUR ST',
+    'stop_lat': 38.948178,
+    'stop_lon': -76.990872
+  }, {
+    'stop_id': '27970',
+    'stop_name': 'SOUTH DAKOTA AVE NE & 10TH ST NE',
+    'stop_lat': 38.949564,
+    'stop_lon': -76.992685
+  }, {
+    'stop_id': '27986',
+    'stop_name': 'SOUTH DAKOTA AVE & 8TH ST',
+    'stop_lat': 38.950737,
+    'stop_lon': -76.994222
+  }, {
+    'stop_id': '6811',
+    'stop_name': 'NE SOUTH DAKOTA AV & NE FARRAGUT PL',
+    'stop_lat': 38.951493,
+    'stop_lon': -76.995201
+  }, {
+    'stop_id': '5369',
+    'stop_name': 'NE GALLOWAY ST & NE SOUTH DAKOTA AV',
+    'stop_lat': 38.952663,
+    'stop_lon': -76.997401
+  }, {
+    'stop_id': '10793',
+    'stop_name': '4TH ST & GALLOWAY ST NE',
+    'stop_lat': 38.952636,
+    'stop_lon': -76.998808
+  }, {
+    'stop_id': '28879',
+    'stop_name': 'FT TOTTEN STATION & DROP OFF ONLY (',
+    'stop_lat': 38.952368,
+    'stop_lon': -77.001852
+  }, {
+    'stop_id': '28958',
+    'stop_name': 'FT TOTTEN STATION & BUS BAY F',
+    'stop_lat': 38.952368,
+    'stop_lon': -77.001852
+  }],
+  'routes': [{
+    'agency_id': 'DC',
+    'route_id': '80',
+    'route_short_name': '3Y',
+    'route_long_name': null,
+    'route_type': 3,
+    'route_color': null
+  }, {
+    'agency_id': 'DC',
+    'route_id': '106',
+    'route_short_name': '80',
+    'route_long_name': null,
+    'route_type': 3,
+    'route_color': null
+  }],
+  'patterns': [{
+    'pattern_id': '67407f4a',
+    'stops': [{
+      'stop_id': '3666'
+    }, {
+      'stop_id': '32057'
+    }, {
+      'stop_id': '8100'
+    }, {
+      'stop_id': '8113'
+    }, {
+      'stop_id': '29143'
+    }, {
+      'stop_id': '27281'
+    }, {
+      'stop_id': '27282'
+    }, {
+      'stop_id': '27289'
+    }, {
+      'stop_id': '27309'
+    }, {
+      'stop_id': '27328'
+    }, {
+      'stop_id': '27338'
+    }, {
+      'stop_id': '27330'
+    }, {
+      'stop_id': '27311'
+    }, {
+      'stop_id': '27302'
+    }, {
+      'stop_id': '27300'
+    }, {
+      'stop_id': '27301'
+    }, {
+      'stop_id': '27294'
+    }, {
+      'stop_id': '27280'
+    }, {
+      'stop_id': '27266'
+    }, {
+      'stop_id': '27277'
+    }, {
+      'stop_id': '27263'
+    }, {
+      'stop_id': '27247'
+    }, {
+      'stop_id': '27236'
+    }, {
+      'stop_id': '27239'
+    }, {
+      'stop_id': '27253'
+    }, {
+      'stop_id': '27268'
+    }, {
+      'stop_id': '27279'
+    }, {
+      'stop_id': '27321'
+    }, {
+      'stop_id': '27336'
+    }, {
+      'stop_id': '32075'
+    }, {
+      'stop_id': '6718'
+    }, {
+      'stop_id': '7969'
+    }, {
+      'stop_id': '2278'
+    }, {
+      'stop_id': '7970'
+    }, {
+      'stop_id': '7971'
+    }, {
+      'stop_id': '27405'
+    }, {
+      'stop_id': '27404'
+    }, {
+      'stop_id': '27402'
+    }, {
+      'stop_id': '27403'
+    }, {
+      'stop_id': '5548'
+    }],
+    'pattern_name': '3Y to NW I ST & NW 14TH ST (DC_5548)',
+    'route_id': '80'
+  }, {
+    'pattern_id': '62e16aa0',
+    'stops': [{
+      'stop_id': '12598'
+    }, {
+      'stop_id': '5498'
+    }, {
+      'stop_id': '5499'
+    }, {
+      'stop_id': '8050'
+    }, {
+      'stop_id': '7061'
+    }, {
+      'stop_id': '7062'
+    }, {
+      'stop_id': '7449'
+    }, {
+      'stop_id': '5869'
+    }, {
+      'stop_id': '6720'
+    }, {
+      'stop_id': '6719'
+    }, {
+      'stop_id': '27251'
+    }, {
+      'stop_id': '6718'
+    }, {
+      'stop_id': '7969'
+    }, {
+      'stop_id': '2278'
+    }, {
+      'stop_id': '4756'
+    }, {
+      'stop_id': '5637'
+    }, {
+      'stop_id': '27405'
+    }, {
+      'stop_id': '27404'
+    }, {
+      'stop_id': '27402'
+    }, {
+      'stop_id': '27403'
+    }, {
+      'stop_id': '27401'
+    }, {
+      'stop_id': '7675'
+    }, {
+      'stop_id': '5506'
+    }, {
+      'stop_id': '5490'
+    }, {
+      'stop_id': '5489'
+    }, {
+      'stop_id': '5488'
+    }, {
+      'stop_id': '27357'
+    }, {
+      'stop_id': '5865'
+    }, {
+      'stop_id': '5864'
+    }, {
+      'stop_id': '27329'
+    }, {
+      'stop_id': '27363'
+    }, {
+      'stop_id': '27380'
+    }, {
+      'stop_id': '27428'
+    }, {
+      'stop_id': '27452'
+    }, {
+      'stop_id': '27468'
+    }, {
+      'stop_id': '28810'
+    }, {
+      'stop_id': '27506'
+    }, {
+      'stop_id': '27547'
+    }, {
+      'stop_id': '27563'
+    }, {
+      'stop_id': '27573'
+    }, {
+      'stop_id': '27586'
+    }, {
+      'stop_id': '27608'
+    }, {
+      'stop_id': '27623'
+    }, {
+      'stop_id': '27632'
+    }, {
+      'stop_id': '27656'
+    }, {
+      'stop_id': '28885'
+    }, {
+      'stop_id': '5918'
+    }, {
+      'stop_id': '5919'
+    }, {
+      'stop_id': '5920'
+    }, {
+      'stop_id': '7455'
+    }, {
+      'stop_id': '6049'
+    }, {
+      'stop_id': '27780'
+    }, {
+      'stop_id': '6050'
+    }, {
+      'stop_id': '27783'
+    }, {
+      'stop_id': '7641'
+    }, {
+      'stop_id': '7642'
+    }, {
+      'stop_id': '7658'
+    }, {
+      'stop_id': '7657'
+    }, {
+      'stop_id': '7645'
+    }, {
+      'stop_id': '7653'
+    }, {
+      'stop_id': '7648'
+    }, {
+      'stop_id': '7649'
+    }, {
+      'stop_id': '6815'
+    }, {
+      'stop_id': '27970'
+    }, {
+      'stop_id': '27986'
+    }, {
+      'stop_id': '6811'
+    }, {
+      'stop_id': '5369'
+    }, {
+      'stop_id': '10793'
+    }, {
+      'stop_id': '28879'
+    }, {
+      'stop_id': '28958'
+    }],
+    'pattern_name': '80 to FT TOTTEN STATION & BUS BAY F (DC_28958) from TERMINAL/KENNEDY CENTER;25TH ST & F ST (DC_12598)',
+    'route_id': '106'
+  }],
+  'places': [{
+    'place_id': 'from',
+    'place_name': 'Start',
+    'place_lat': 38.895,
+    'place_lon': -77.09
+  }, {
+    'place_id': 'to',
+    'place_name': 'End',
+    'place_lat': 38.894,
+    'place_lon': -77.01
+  }],
+  'journeys': [{
+    'journey_id': 'option_0',
+    'journey_name': 'routes 3Y, 80 via NW 18TH ST & NW PENNSYLVANIA AV',
+    'segments': [{
+      'type': 'WALK',
+      'from': {
+        'type': 'PLACE',
+        'place_id': 'from'
+      },
+      'to': {
+        'type': 'STOP',
+        'stop_id': '27247'
+      }
+    }, {
+      'type': 'TRANSIT',
+      'pattern_id': '67407f4a',
+      'from_stop_index': 21,
+      'to_stop_index': 32
+    }, {
+      'type': 'TRANSIT',
+      'pattern_id': '62e16aa0',
+      'from_stop_index': 13,
+      'to_stop_index': 29
+    }, {
+      'type': 'WALK',
+      'from': {
+        'type': 'STOP',
+        'stop_id': '27329'
+      },
+      'to': {
+        'type': 'PLACE',
+        'place_id': 'to'
+      }
+    }]
+  }]
+};
