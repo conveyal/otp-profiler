@@ -336,6 +336,7 @@ Profiler.prototype.profile = function(params, callback) {
 
   // Remove invalid options
   delete qs.profile;
+  delete qs.routes;
 
   // Request the profile
   this.request('/profile?' + stringify(qs), callback);
