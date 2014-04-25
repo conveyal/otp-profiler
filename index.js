@@ -1,14 +1,27 @@
 var Batch = require('batch');
-var clone = require('clone');
-var each = require('each');
-var jsonp = require('jsonp');
-var stringify = require('querystring').stringify;
+var clone;
+var superagent = require('superagent');
+
+try {
+  clone = require('clone');
+} catch (e) {
+  clone = require('component-clone');
+}
 
 /**
  * Expose `Profiler`
  */
 
 module.exports = Profiler;
+
+/**
+ * "store" routes & pattens
+ */
+
+var store = {
+  patterns: {},
+  routes: null
+};
 
 /**
  * Profiler
@@ -20,8 +33,8 @@ function Profiler(opts) {
   if (!(this instanceof Profiler)) return new Profiler(opts);
   if (!opts.host) throw new Error('Profiler requires a host.');
 
-  this.limit = opts.limit || 3;
   this.host = opts.host;
+  this.limit = opts.limit || 3;
 }
 
 /**
@@ -100,11 +113,11 @@ Profiler.prototype.convertOtpData = function(opts) {
   };
 
   // Collect all unique stops
-  each(opts.patterns, function(pattern) {
+  opts.patterns.forEach(function(pattern) {
     // Store all used route ids
     if (routeIds.indexOf(pattern.routeId) === -1) routeIds.push(pattern.routeId);
 
-    each(pattern.stops, function(stop) {
+    pattern.stops.forEach(function(stop) {
       if (stopIds.indexOf(stop.id) === -1) {
         // TODO: Just use normal names
         data.stops.push({
@@ -119,7 +132,7 @@ Profiler.prototype.convertOtpData = function(opts) {
   });
 
   // Collect routes
-  each(opts.routes, function(route) {
+  opts.routes.forEach(function(route) {
     if (routeIds.indexOf(route.id) !== -1) {
       // TODO: Just use normal names
       data.routes.push({
@@ -134,7 +147,7 @@ Profiler.prototype.convertOtpData = function(opts) {
   });
 
   // Collect patterns
-  each(opts.patterns, function(pattern) {
+  opts.patterns.forEach(function(pattern) {
     // TODO: Just use normal names
     var obj = {
       pattern_id: pattern.id,
@@ -144,7 +157,7 @@ Profiler.prototype.convertOtpData = function(opts) {
     if (pattern.desc) obj.pattern_name = pattern.desc;
     if (pattern.routeId) obj.route_id = pattern.routeId;
 
-    each(pattern.stops, function(stop) {
+    pattern.stops.forEach(function(stop) {
       obj.stops.push({
         stop_id: stop.id
       });
@@ -174,7 +187,7 @@ Profiler.prototype.convertOtpData = function(opts) {
   }
 
   // Collect journeys
-  each(opts.profile.options, function(option, optionIndex) {
+  opts.profile.options.forEach(function(option, optionIndex) {
     var journey = {
       journey_id: 'option_' + optionIndex,
       journey_name: option.summary || 'Option ' + (optionIndex + 1),
@@ -199,7 +212,7 @@ Profiler.prototype.convertOtpData = function(opts) {
       });
     }
 
-    each(option.segments, function(segment, segmentIndex) {
+    option.segments.forEach(function(segment, segmentIndex) {
       // Add the transit segment
       var firstPattern = segment.segmentPatterns[0];
       journey.segments.push({
@@ -275,7 +288,7 @@ Profiler.prototype.patterns = function(opts, callback) {
   var ids = this.getUniquePatternIds(opts.profile);
 
   // Load all the patterns
-  each(ids, function(id) {
+  ids.forEach(function(id) {
     batch.push(function(done) {
       profiler.pattern(id, done);
     });
@@ -295,9 +308,9 @@ Profiler.prototype.getUniquePatternIds = function(profile) {
   var ids = [];
 
   // Iterate over each option and add the pattern if it does not already exist
-  each(profile.options, function(option, index) {
-    each(option.segments, function(segment) {
-      each(segment.segmentPatterns, function(pattern) {
+  profile.options.forEach(function(option, index) {
+    option.segments.forEach(function(segment) {
+      segment.segmentPatterns.forEach(function(pattern) {
         if (ids.indexOf(pattern.patternId) === -1) {
           ids.push(pattern.patternId);
         }
@@ -316,7 +329,18 @@ Profiler.prototype.getUniquePatternIds = function(profile) {
  */
 
 Profiler.prototype.pattern = function(id, callback) {
-  this.request('/index/patterns/' + id, callback);
+  if (store.patterns[id]) {
+    callback(null, store.patterns[id]);
+  } else {
+    this.request('/index/patterns/' + id, function(err, pattern) {
+      if (err) {
+        callback(err);
+      } else {
+        store.patterns[id] = pattern;
+        callback(null, pattern);
+      }
+    });
+  }
 };
 
 /**
@@ -339,7 +363,7 @@ Profiler.prototype.profile = function(params, callback) {
   delete qs.routes;
 
   // Request the profile
-  this.request('/profile?' + stringify(qs), callback);
+  this.request('/profile', qs, callback);
 };
 
 /**
@@ -349,7 +373,18 @@ Profiler.prototype.profile = function(params, callback) {
  */
 
 Profiler.prototype.routes = function(callback) {
-  this.request('/index/routes', callback);
+  if (store.routes) {
+    callback(null, store.routes);
+  } else {
+    this.request('/index/routes', function(err, routes) {
+      if (err) {
+        callback(err);
+      } else {
+        store.routes = routes;
+        callback(null, routes);
+      }
+    });
+  }
 };
 
 /**
@@ -359,8 +394,22 @@ Profiler.prototype.routes = function(callback) {
  * @param {Function} callback
  */
 
-Profiler.prototype.request = function(path, callback) {
-  jsonp(this.host + path, callback);
+Profiler.prototype.request = function(path, params, callback) {
+  if (arguments.length === 2) {
+    callback = params;
+    params = null;
+  }
+
+  superagent
+    .get(this.host + path)
+    .query(params)
+    .end(function(err, res) {
+      if (err || res.error || !res.ok) {
+        callback(err || res.error || res.text);
+      } else {
+        callback(null, res.body);
+      }
+    });
 };
 
 /**

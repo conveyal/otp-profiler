@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../build/build.js"></script>
+  </head>
+  <body>
+    <script>
+      var Profiler = require('otpprofiler.js');
+      var profiler = new Profiler({
+        host: 'http://localhost:8080/otp/routers/default',
+        origin: document.location.origin
+      });
+    </script>
+  </body>
+</html>

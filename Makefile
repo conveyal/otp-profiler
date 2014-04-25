@@ -1,6 +1,6 @@
 
 COMPONENT := ./node_modules/.bin/component
-JS := index.js test/index.js
+JS := index.js $(shell find test -name '*.js' -print)
 
 build: install $(JS)
 	@$(MAKE) lint
@@ -23,7 +23,10 @@ lint: install $(JS)
 node_modules: package.json
 	@npm install
 
-test: build
+test:
+	./node_modules/.bin/mocha --timeout 10s
+
+test-client: build
 	@$(COMPONENT) test phantom
 
 watch:
