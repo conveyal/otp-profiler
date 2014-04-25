@@ -1,4 +1,10 @@
 
+## 0.3.0 — 2014-04-25
+
+* Dropped JSONP in favor of Superagent
+* Node.js compatible package now
+* Store patterns and routes so that they are not requeried each time
+
 ## 0.2.4 — 2014-04-24
 
 * Don't pass routes object as a query parameter while profiling
