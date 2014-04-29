@@ -6,12 +6,13 @@ var Profiler = require('..');
  */
 
 var config = {
-  fromLocation: {
+  from: {
     name: 'Start',
     lat: 38.86583312290139,
     lon: -77.06398626875051
   },
-  toLocation: {
+  limit: 1,
+  to: {
     name: 'End',
     lat: 38.90485941802882,
     lon: -77.03453592419277
@@ -35,10 +36,7 @@ describe('otpprofiler.js', function() {
         host: endpoint
       });
 
-      profiler.profile({
-        from: config.fromLocation,
-        to: config.toLocation
-      }, function(err, results) {
+      profiler.profile(config, function(err, results) {
         if (err) return done(err);
         assert.deepEqual(results, require('./data/profile'));
         assert(results.options.length === 2);
@@ -68,10 +66,7 @@ describe('otpprofiler.js', function() {
         limit: 1
       });
 
-      profiler.journey({
-        from: config.fromLocation,
-        to: config.toLocation
-      }, function(err, results) {
+      profiler.journey(config, function(err, results) {
         if (err) return done(err);
         assert.deepEqual(results, require('./data/journey'));
         done();

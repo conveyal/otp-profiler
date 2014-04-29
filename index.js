@@ -188,6 +188,8 @@ Profiler.prototype.convertOtpData = function(opts) {
 
   // Collect journeys
   opts.profile.options.forEach(function(option, optionIndex) {
+    if (option.segments.length === 0) return;
+
     var journey = {
       journey_id: 'option_' + optionIndex,
       journey_name: option.summary || 'Option ' + (optionIndex + 1),
@@ -361,6 +363,8 @@ Profiler.prototype.profile = function(params, callback) {
   // Remove invalid options
   delete qs.profile;
   delete qs.routes;
+
+  console.log(qs);
 
   // Request the profile
   this.request('/profile', qs, callback);
