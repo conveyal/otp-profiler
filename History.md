@@ -1,4 +1,8 @@
 
+## 0.3.4 — 2014-04-29
+
+* Skip options with 0 segments
+
 ## 0.3.3 — 2014-04-29
 
 * Testing tagging problems
