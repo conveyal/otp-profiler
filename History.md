@@ -1,4 +1,8 @@
 
+## 0.3.1 — 2014-04-29
+
+* Updated Component
+
 ## 0.3.0 — 2014-04-25
 
 * Dropped JSONP in favor of Superagent
