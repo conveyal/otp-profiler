@@ -1,4 +1,12 @@
 
+## 0.3.3 — 2014-04-29
+
+* Testing tagging problems
+
+## 0.3.2 — 2014-04-29
+
+* Testing tagging problems
+
 ## 0.3.1 — 2014-04-29
 
 * Updated Component
