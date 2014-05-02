@@ -364,8 +364,6 @@ Profiler.prototype.profile = function(params, callback) {
   delete qs.profile;
   delete qs.routes;
 
-  console.log(qs);
-
   // Request the profile
   this.request('/profile', qs, callback);
 };
