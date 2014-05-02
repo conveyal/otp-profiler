@@ -334,7 +334,8 @@ Profiler.prototype.pattern = function(id, callback) {
   if (store.patterns[id]) {
     callback(null, store.patterns[id]);
   } else {
-    this.request('/index/patterns/' + id, function(err, pattern) {
+    this.request('/index/patterns/' + encodeURIComponent(id), function(err,
+      pattern) {
       if (err) {
         callback(err);
       } else {
