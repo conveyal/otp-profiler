@@ -378,7 +378,7 @@ Profiler.prototype.profile = function(params, callback) {
  */
 
 Profiler.prototype.routes = function(callback) {
-  if (store.routes) {
+  if (store.routes !== null) {
     callback(null, store.routes);
   } else {
     this.request('/index/routes', function(err, routes) {
