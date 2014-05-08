@@ -1,4 +1,8 @@
 
+## 0.3.5 — 2014-05-08
+
+* Use [component/each](https://github.com/component/each) instead of `.forEach` to better handle null objects
+
 ## 0.3.4 — 2014-04-29
 
 * Skip options with 0 segments
