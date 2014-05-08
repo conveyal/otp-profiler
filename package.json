@@ -9,6 +9,7 @@
   "dependencies": {
     "batch": "^0.5.0",
     "component-clone": "^0.2.2",
+    "component-each": "trevorgerhardt/each",
     "superagent": "^0.17.0"
   },
   "devDependencies": {

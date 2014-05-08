@@ -11,12 +11,12 @@ var config = {
     lat: 38.86583312290139,
     lon: -77.06398626875051
   },
-  limit: 1,
   to: {
     name: 'End',
     lat: 38.90485941802882,
     lon: -77.03453592419277
-  }
+  },
+  limit: 1
 };
 
 /**
@@ -39,7 +39,7 @@ describe('otpprofiler.js', function() {
       profiler.profile(config, function(err, results) {
         if (err) return done(err);
         assert.deepEqual(results, require('./data/profile'));
-        assert(results.options.length === 2);
+        assert(results.options.length === 1);
         done();
       });
     });

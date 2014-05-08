@@ -7,8 +7,7 @@
     <script>
       var Profiler = require('otpprofiler.js');
       var profiler = new Profiler({
-        host: 'http://localhost:8080/otp/routers/default',
-        origin: document.location.origin
+        host: 'http://localhost:8080/otp/routers/default'
       });
       var od = {
         from: {
@@ -20,7 +19,8 @@
           name: 'End',
           lat: 38.90485941802882,
           lon: -77.03453592419277
-        }
+        },
+        limit: 1
       };
     </script>
   </body>

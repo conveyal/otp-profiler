@@ -1,52 +1,70 @@
 module.exports = {
   'options': [{
     'segments': [{
-      'walkTime': 526,
-      'walkDistance': 737,
+      'walkTime': 315,
+      'walkDistance': 441,
       'waitStats': {
         'min': 0,
-        'avg': 295,
-        'max': 720,
-        'num': 6960
+        'avg': 774,
+        'max': 1800,
+        'num': 5754
+      },
+      'route': '1',
+      'mode': 'BUS',
+      'from': '26761',
+      'to': '29349',
+      'fromName': 'ARMY-NAVY DR & S HAYES ST',
+      'toName': 'PENTAGON STATION & BUS BAY U11',
+      'routeShortName': '10A',
+      'rideStats': {
+        'min': 144,
+        'avg': 144,
+        'max': 144,
+        'num': 4
+      },
+      'segmentPatterns': [{
+        'patternId': 'DC_1_04',
+        'fromIndex': 51,
+        'toIndex': 52,
+        'nTrips': 4
+      }]
+    }, {
+      'walkTime': 27,
+      'walkDistance': 38,
+      'waitStats': {
+        'min': 33,
+        'avg': 213,
+        'max': 393,
+        'num': 14
       },
       'route': 'BLUE',
       'mode': 'SUBWAY',
-      'from': '12930',
+      'from': '12928',
       'to': '7932',
-      'fromName': 'PENTAGON CITY METRO STATION',
+      'fromName': 'PENTAGON METRO STATION',
       'toName': 'FARRAGUT WEST METRO STATION',
       'routeShortName': 'Blue',
       'routeLongName': 'Metrorail Blue Line',
       'rideStats': {
-        'min': 660,
-        'avg': 660,
-        'max': 660,
+        'min': 600,
+        'avg': 600,
+        'max': 600,
         'num': 12
       },
       'segmentPatterns': [{
         'patternId': 'DC_BLUE_03',
-        'fromIndex': 6,
+        'fromIndex': 7,
         'toIndex': 11,
-        'nTrips': 353
+        'nTrips': 12
       }]
     }],
     'finalWalkTime': 780,
     'stats': {
-      'min': 1966,
-      'avg': 2514,
-      'max': 2686,
+      'min': 1899,
+      'avg': 2853,
+      'max': 4059,
       'num': 1
     },
-    'summary': 'routes Blue'
-  }, {
-    'segments': [],
-    'finalWalkTime': 5394,
-    'stats': {
-      'min': 5394,
-      'avg': 5394,
-      'max': 5394,
-      'num': 1
-    },
-    'summary': 'WALK'
+    'summary': 'routes 10A, Blue via PENTAGON STATION & BUS BAY U11'
   }]
 };

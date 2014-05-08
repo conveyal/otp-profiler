@@ -1,11 +1,13 @@
 var Batch = require('batch');
-var clone;
+var clone, each;
 var superagent = require('superagent');
 
 try {
   clone = require('clone');
+  each = require('each');
 } catch (e) {
   clone = require('component-clone');
+  each = require('component-each');
 }
 
 /**
@@ -113,11 +115,11 @@ Profiler.prototype.convertOtpData = function(opts) {
   };
 
   // Collect all unique stops
-  opts.patterns.forEach(function(pattern) {
+  each(opts.patterns, function(pattern) {
     // Store all used route ids
     if (routeIds.indexOf(pattern.routeId) === -1) routeIds.push(pattern.routeId);
 
-    pattern.stops.forEach(function(stop) {
+    each(pattern.stops, function(stop) {
       if (stopIds.indexOf(stop.id) === -1) {
         // TODO: Just use normal names
         data.stops.push({
@@ -132,7 +134,7 @@ Profiler.prototype.convertOtpData = function(opts) {
   });
 
   // Collect routes
-  opts.routes.forEach(function(route) {
+  each(opts.routes, function(route) {
     if (routeIds.indexOf(route.id) !== -1) {
       // TODO: Just use normal names
       data.routes.push({
@@ -147,7 +149,7 @@ Profiler.prototype.convertOtpData = function(opts) {
   });
 
   // Collect patterns
-  opts.patterns.forEach(function(pattern) {
+  each(opts.patterns, function(pattern) {
     // TODO: Just use normal names
     var obj = {
       pattern_id: pattern.id,
@@ -157,7 +159,7 @@ Profiler.prototype.convertOtpData = function(opts) {
     if (pattern.desc) obj.pattern_name = pattern.desc;
     if (pattern.routeId) obj.route_id = pattern.routeId;
 
-    pattern.stops.forEach(function(stop) {
+    each(pattern.stops, function(stop) {
       obj.stops.push({
         stop_id: stop.id
       });
@@ -187,7 +189,7 @@ Profiler.prototype.convertOtpData = function(opts) {
   }
 
   // Collect journeys
-  opts.profile.options.forEach(function(option, optionIndex) {
+  each(opts.profile.options, function(option, optionIndex) {
     if (option.segments.length === 0) return;
 
     var journey = {
@@ -214,7 +216,7 @@ Profiler.prototype.convertOtpData = function(opts) {
       });
     }
 
-    option.segments.forEach(function(segment, segmentIndex) {
+    each(option.segments, function(segment, segmentIndex) {
       // Add the transit segment
       var firstPattern = segment.segmentPatterns[0];
       journey.segments.push({
@@ -290,7 +292,7 @@ Profiler.prototype.patterns = function(opts, callback) {
   var ids = this.getUniquePatternIds(opts.profile);
 
   // Load all the patterns
-  ids.forEach(function(id) {
+  each(ids, function(id) {
     batch.push(function(done) {
       profiler.pattern(id, done);
     });
@@ -310,9 +312,9 @@ Profiler.prototype.getUniquePatternIds = function(profile) {
   var ids = [];
 
   // Iterate over each option and add the pattern if it does not already exist
-  profile.options.forEach(function(option, index) {
-    option.segments.forEach(function(segment) {
-      segment.segmentPatterns.forEach(function(pattern) {
+  each(profile.options, function(option, index) {
+    each(option.segments, function(segment) {
+      each(segment.segmentPatterns, function(pattern) {
         if (ids.indexOf(pattern.patternId) === -1) {
           ids.push(pattern.patternId);
         }

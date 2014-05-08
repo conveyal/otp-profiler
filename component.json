@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "component/clone": "0.2.2",
+    "component/each": "0.2.2",
     "visionmedia/batch": "0.5.0",
     "visionmedia/superagent": "0.17.0"
   },
