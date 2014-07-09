@@ -4,7 +4,7 @@
   "author": "Conveyal",
   "repository": {
     "type": "git",
-    "url": "git://github.com/conveyal/otp-profiler"
+    "url": "git://github.com/conveyal/otp-profiler.git"
   },
   "dependencies": {
     "batch": "^0.5.1",
