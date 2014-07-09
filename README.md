@@ -1,11 +1,12 @@
-# otpprofiler.js
+# otp-profiler
 
 Component library for processing OTP profile results. Requires an instance of OTP that is accessible via JSONP requests.
 
 ## Installation
 
 ```bash
-$ component install conveyal/otpprofiler.js
+$ component install conveyal/otp-profiler
+$ npm install otp-profiler
 ```
 
 ## Usage
@@ -13,7 +14,7 @@ $ component install conveyal/otpprofiler.js
 For example data returned, see `test/index.js`.
 
 ```javascript
-var Profiler = require('otpprofiler.js');
+var Profiler = require('otp-profiler');
 
 // O/D points
 var od = {
