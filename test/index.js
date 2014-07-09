@@ -38,8 +38,7 @@ describe('otpprofiler.js', function() {
 
       profiler.profile(config, function(err, results) {
         if (err) return done(err);
-        assert.deepEqual(results, require('./data/profile'));
-        assert(results.options.length === 1);
+        assert(results.options.length > 0);
         done();
       });
     });
@@ -62,13 +61,12 @@ describe('otpprofiler.js', function() {
   describe('#journey()', function() {
     it('should request patterns for a given O/D journey', function(done) {
       var profiler = new Profiler({
-        host: endpoint,
-        limit: 1
+        host: endpoint
       });
 
       profiler.journey(config, function(err, results) {
         if (err) return done(err);
-        assert.deepEqual(results, require('./data/journey'));
+        assert(results.journeys.length > 0);
         done();
       });
     });

@@ -1,10 +1,10 @@
 {
-  "name": "otpprofiler.js",
-  "version": "0.3.5",
+  "name": "otp-profiler",
+  "version": "0.4.0",
   "author": "Conveyal",
   "repository": {
     "type": "git",
-    "url": "git://github.com/conveyal/otpprofiler.js"
+    "url": "git://github.com/conveyal/otp-profiler"
   },
   "dependencies": {
     "component/clone": "0.2.2",

@@ -1,16 +1,16 @@
 {
-  "name": "otpprofiler.js",
-  "version": "0.3.5",
+  "name": "otp-profiler",
+  "version": "0.4.0",
   "author": "Conveyal",
   "repository": {
     "type": "git",
-    "url": "git://github.com/conveyal/otpprofiler.js"
+    "url": "git://github.com/conveyal/otp-profiler"
   },
   "dependencies": {
-    "batch": "^0.5.0",
+    "batch": "^0.5.1",
     "component-clone": "^0.2.2",
-    "component-each": "trevorgerhardt/each",
-    "superagent": "^0.17.0"
+    "component-each": "^0.2.5",
+    "superagent": "^0.18.1"
   },
   "devDependencies": {
     "component": "^0.19.9",
