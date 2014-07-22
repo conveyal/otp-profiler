@@ -95,6 +95,7 @@ Profiler.prototype.journey = function(opts, callback) {
  */
 
 Profiler.prototype.convertOtpData = function(opts) {
+  console.log(opts);
   var data = {
     journeys: [],
     patterns: [],
@@ -190,7 +191,16 @@ Profiler.prototype.convertOtpData = function(opts) {
 
   // Collect journeys
   each(opts.profile.options, function(option, optionIndex) {
-    if (option.segments.length === 0) return;
+
+    // handle bike-only option as a special case
+    if (option.segments.length === 0) {
+      if(option.summary === 'BICYCLE') {
+        data.journeys.push(processBikeOption(option, optionIndex));
+      }
+      return; // ignore other non-transit journeys (e.g. walk-only) completely
+    }
+
+    // process option as transit journey
 
     var journey = {
       journey_id: 'option_' + optionIndex,
@@ -276,6 +286,44 @@ Profiler.prototype.convertOtpData = function(opts) {
 
   return data;
 };
+
+function processBikeOption(option, optionIndex) {
+  var bikeJourney = {
+    journey_id: 'option_' + optionIndex,
+    journey_name: option.summary,
+    segments: []
+  };
+
+  var turnPoints = [];
+  if(option.walkSteps) {
+    for(var i = 1; i < option.walkSteps.length; i++) {
+      var step = option.walkSteps[i];
+      turnPoints.push({
+        lat: step.lat,
+        lon: step.lon,
+        relativeDirection: step.relativeDirection,
+        inStreet: option.walkSteps[i-1].streetName,
+        outStreet: step.streetName
+      });
+    }
+  }
+
+  bikeJourney.segments.push({
+    type: 'BICYCLE',
+    from: {
+      type: 'PLACE',
+      place_id: 'from'
+    },
+    to: {
+      type: 'PLACE',
+      place_id: 'to',
+    },
+    turnPoints : turnPoints
+  });
+
+  return bikeJourney;
+}
+
 
 /**
  * Patterns
