@@ -192,10 +192,11 @@ Profiler.prototype.convertOtpData = function(opts) {
   // Collect journeys
   each(opts.profile.options, function(option, optionIndex) {
 
-    // handle bike-only option as a special case
+    // handle non-transit option as a special case
     if (option.segments.length === 0) {
-      if(option.summary === 'BICYCLE') {
-        data.journeys.push(processBikeOption(option, optionIndex));
+      console.log(option.summary);
+      if(option.summary === 'WALK' || option.summary === 'BICYCLE' || option.summary === 'CAR') {
+        data.journeys.push(processNonTransitOption(option, optionIndex));
       }
       return; // ignore other non-transit journeys (e.g. walk-only) completely
     }
@@ -287,8 +288,8 @@ Profiler.prototype.convertOtpData = function(opts) {
   return data;
 };
 
-function processBikeOption(option, optionIndex) {
-  var bikeJourney = {
+function processNonTransitOption(option, optionIndex) {
+  var journey = {
     journey_id: 'option_' + optionIndex,
     journey_name: option.summary,
     segments: []
@@ -308,8 +309,8 @@ function processBikeOption(option, optionIndex) {
     }
   }
 
-  bikeJourney.segments.push({
-    type: 'BICYCLE',
+  journey.segments.push({
+    type: option.summary,
     from: {
       type: 'PLACE',
       place_id: 'from'
@@ -321,7 +322,7 @@ function processBikeOption(option, optionIndex) {
     turnPoints : turnPoints
   });
 
-  return bikeJourney;
+  return journey;
 }
 
 
