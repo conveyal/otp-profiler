@@ -194,8 +194,8 @@ Profiler.prototype.convertOtpData = function(opts) {
 
     // handle non-transit option as a special case
     if (option.segments.length === 0) {
-      console.log(option.summary);
-      if(option.summary === 'WALK' || option.summary === 'BICYCLE' || option.summary === 'CAR') {
+      var summary = option.summary.toUpperCase();
+      if(summary === 'WALK' || summary === 'BICYCLE' || summary === 'CAR') {
         data.journeys.push(processNonTransitOption(option, optionIndex));
       }
       return; // ignore other non-transit journeys (e.g. walk-only) completely
@@ -291,7 +291,7 @@ Profiler.prototype.convertOtpData = function(opts) {
 function processNonTransitOption(option, optionIndex) {
   var journey = {
     journey_id: 'option_' + optionIndex,
-    journey_name: option.summary,
+    journey_name: option.summary.toUpperCase(),
     segments: []
   };
 
@@ -310,7 +310,7 @@ function processNonTransitOption(option, optionIndex) {
   }
 
   journey.segments.push({
-    type: option.summary,
+    type: option.summary.toUpperCase(),
     from: {
       type: 'PLACE',
       place_id: 'from'
