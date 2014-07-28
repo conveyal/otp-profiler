@@ -95,7 +95,6 @@ Profiler.prototype.journey = function(opts, callback) {
  */
 
 Profiler.prototype.convertOtpData = function(opts) {
-  console.log(opts);
   var data = {
     journeys: [],
     patterns: [],
