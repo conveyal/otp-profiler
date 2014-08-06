@@ -121,7 +121,6 @@ Profiler.prototype.convertOtpData = function(opts) {
 
     each(pattern.stops, function(stop) {
       if (stopIds.indexOf(stop.id) === -1) {
-        // TODO: Just use normal names
         data.stops.push({
           stop_id: stop.id,
           stop_name: stop.name,
@@ -136,7 +135,6 @@ Profiler.prototype.convertOtpData = function(opts) {
   // Collect routes
   each(opts.routes, function(route) {
     if (routeIds.indexOf(route.id) !== -1) {
-      // TODO: Just use normal names
       data.routes.push({
         agency_id: route.agency,
         route_id: route.id,
@@ -150,7 +148,6 @@ Profiler.prototype.convertOtpData = function(opts) {
 
   // Collect patterns
   each(opts.patterns, function(pattern) {
-    // TODO: Just use normal names
     var obj = {
       pattern_id: pattern.id,
       stops: []
@@ -189,15 +186,21 @@ Profiler.prototype.convertOtpData = function(opts) {
   }
 
   // Collect journeys
-  each(opts.profile.options, function(option, optionIndex) {
+  var optionIndex = 0;
+  each(opts.profile.options, function(option) {
 
     // handle non-transit option as a special case
-    if (option.segments.length === 0) {
-      var summary = option.summary.toUpperCase();
-      if(summary === 'WALK' || summary === 'BICYCLE' || summary === 'CAR') {
-        data.journeys.push(processNonTransitOption(option, optionIndex));
-      }
-      return; // ignore other non-transit journeys (e.g. walk-only) completely
+    if (!option.hasOwnProperty('transit')) {
+
+      // create separate journey for each non-transit mode contained in this option
+      each(option.access, function(leg) {
+        var mode = leg.mode.toUpperCase();
+        if(mode === 'WALK' || mode === 'BICYCLE' || mode === 'CAR') {
+          data.journeys.push(processNonTransitOption(leg, optionIndex));
+          optionIndex++;
+        }
+      });
+      return;
     }
 
     // process option as transit journey
@@ -208,13 +211,14 @@ Profiler.prototype.convertOtpData = function(opts) {
       segments: []
     };
 
-    // Add the starting walk segment
-    if (opts.from) {
-      var firstPattern = option.segments[0].segmentPatterns[0];
+    // Add the access segment
+    if (opts.from && option.access) {
+      var bestAccess = option.access[0]; // assume the first returned access leg is the best
+      var firstPattern = option.transit[0].segmentPatterns[0];
       var boardStop = getPattern(firstPattern.patternId).stops[firstPattern.fromIndex];
 
-      journey.segments.push({
-        type: 'WALK',
+      var accessSegment = {
+        type: bestAccess.mode,
         from: {
           type: 'PLACE',
           place_id: 'from'
@@ -222,25 +226,55 @@ Profiler.prototype.convertOtpData = function(opts) {
         to: {
           type: 'STOP',
           stop_id: boardStop.id,
-        }
-      });
+        },
+        turnPoints : getTurnPoints(bestAccess.walkSteps)
+      };
+
+      journey.segments.push(accessSegment);
     }
 
-    each(option.segments, function(segment, segmentIndex) {
-      // Add the transit segment
-      var firstPattern = segment.segmentPatterns[0];
+    each(option.transit, function(segment, segmentIndex) {
+
+      // construct a collection of 'typical' patterns for each route that serves this segment
+      var routePatterns = {}; // maps routeId to a segmentPattern object
+      each(segment.segmentPatterns, function(segmentPattern) {
+        var pattern = store.patterns[segmentPattern.patternId];
+
+        if(pattern.routeId in routePatterns) { // if we already have a pattern for this route
+          // replace the existing pattern only if the new one has more trips
+          if(segmentPattern.nTrips > routePatterns[pattern.routeId].nTrips) {
+            routePatterns[pattern.routeId] = segmentPattern;
+          }
+        }
+        else { // otherwise, store this pattern as the initial typical pattern for its route
+          routePatterns[pattern.routeId] = segmentPattern;
+        }
+      }, this);
+
+      var patterns = [];
+      for(var routeId in routePatterns) {
+        var segmentPattern = routePatterns[routeId];
+        patterns.push({
+          pattern_id: segmentPattern.patternId,
+          from_stop_index: segmentPattern.fromIndex,
+          to_stop_index: segmentPattern.toIndex
+        });
+      }
+
       journey.segments.push({
         type: 'TRANSIT',
-        pattern_id: firstPattern.patternId,
+        patterns: patterns
+        /*pattern_id: firstPattern.patternId,
         from_stop_index: firstPattern.fromIndex,
-        to_stop_index: firstPattern.toIndex
+        to_stop_index: firstPattern.toIndex*/
       });
 
-      // Add a walk segment
-      if (option.segments.length > segmentIndex + 1) {
-        var alightStop = getPattern(firstPattern.patternId).stops[
-          firstPattern.toIndex];
-        var nextSegment = option.segments[segmentIndex + 1];
+      // Add a walk segment for the transfer, if needed
+      if (option.transit.length > segmentIndex + 1) {
+        var currentFirstPattern = segment.segmentPatterns[0];
+        var alightStop = getPattern(currentFirstPattern.patternId).stops[
+          currentFirstPattern.toIndex];
+        var nextSegment = option.transit[segmentIndex + 1];
         var nextFirstPattern = nextSegment.segmentPatterns[0];
         var boardStop = getPattern(nextFirstPattern.patternId).stops[
           nextFirstPattern.fromIndex];
@@ -261,14 +295,14 @@ Profiler.prototype.convertOtpData = function(opts) {
       }
     });
 
-    // Add the ending walk segment
-    if (opts.to) {
-      var lastPattern = option.segments[option.segments.length - 1].segmentPatterns[
-        0];
+    // Add the egress segment
+    if (opts.to && option.egress) {
+      var bestEgress = option.egress[0]; // assume the first returned egress leg is the best
+      var lastPattern = option.transit[option.transit.length - 1].segmentPatterns[0];
       var alightStop = getPattern(lastPattern.patternId).stops[lastPattern.toIndex];
 
-      journey.segments.push({
-        type: 'WALK',
+      var egressSegment = {
+        type: bestEgress.mode,
         from: {
           type: 'STOP',
           stop_id: alightStop.id
@@ -276,12 +310,17 @@ Profiler.prototype.convertOtpData = function(opts) {
         to: {
           type: 'PLACE',
           place_id: 'to'
-        }
-      });
+        },
+        turnPoints : getTurnPoints(bestEgress.walkSteps)
+      };
+
+      journey.segments.push(egressSegment);
     }
 
     // Add the journey
     data.journeys.push(journey);
+
+    optionIndex++;
   });
 
   return data;
@@ -290,26 +329,12 @@ Profiler.prototype.convertOtpData = function(opts) {
 function processNonTransitOption(option, optionIndex) {
   var journey = {
     journey_id: 'option_' + optionIndex,
-    journey_name: option.summary.toUpperCase(),
+    journey_name: option.mode.toUpperCase(),
     segments: []
   };
 
-  var turnPoints = [];
-  if(option.walkSteps) {
-    for(var i = 1; i < option.walkSteps.length; i++) {
-      var step = option.walkSteps[i];
-      turnPoints.push({
-        lat: step.lat,
-        lon: step.lon,
-        relativeDirection: step.relativeDirection,
-        inStreet: option.walkSteps[i-1].streetName,
-        outStreet: step.streetName
-      });
-    }
-  }
-
   journey.segments.push({
-    type: option.summary.toUpperCase(),
+    type: option.mode.toUpperCase(),
     from: {
       type: 'PLACE',
       place_id: 'from'
@@ -318,10 +343,27 @@ function processNonTransitOption(option, optionIndex) {
       type: 'PLACE',
       place_id: 'to',
     },
-    turnPoints : turnPoints
+    turnPoints : getTurnPoints(option.walkSteps)
   });
 
   return journey;
+}
+
+function getTurnPoints(walkSteps) {
+  var turnPoints = [];
+  if(walkSteps) {
+    for(var i = 1; i < walkSteps.length; i++) {
+      var step = walkSteps[i];
+      turnPoints.push({
+        lat: step.lat,
+        lon: step.lon,
+        relativeDirection: step.relativeDirection,
+        inStreet: walkSteps[i-1].streetName,
+        outStreet: step.streetName
+      });
+    }
+  }
+  return turnPoints;
 }
 
 
@@ -361,8 +403,8 @@ Profiler.prototype.getUniquePatternIds = function(profile) {
 
   // Iterate over each option and add the pattern if it does not already exist
   each(profile.options, function(option, index) {
-    each(option.segments, function(segment) {
-      each(segment.segmentPatterns, function(pattern) {
+    each(option.transit, function(transitSegment) {
+      each(transitSegment.segmentPatterns, function(pattern) {
         if (ids.indexOf(pattern.patternId) === -1) {
           ids.push(pattern.patternId);
         }
