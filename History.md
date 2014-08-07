@@ -1,4 +1,8 @@
 
+## 0.4.1 — 2014-08-07
+
+* Unpin dependencies
+
 ## 0.3.5 — 2014-05-08
 
 * Use [component/each](https://github.com/component/each) instead of `.forEach` to better handle null objects
