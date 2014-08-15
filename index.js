@@ -120,14 +120,15 @@ Profiler.prototype.convertOtpData = function(opts) {
     if (routeIds.indexOf(pattern.routeId) === -1) routeIds.push(pattern.routeId);
 
     each(pattern.stops, function(stop) {
-      if (stopIds.indexOf(stop.id) === -1) {
+      var stopId = getStopId(stop);
+      if (stopIds.indexOf(stopId) === -1) {
         data.stops.push({
-          stop_id: stop.id,
+          stop_id: stopId,
           stop_name: stop.name,
           stop_lat: stop.lat,
           stop_lon: stop.lon
         });
-        stopIds.push(stop.id);
+        stopIds.push(stopId);
       }
     });
   });
@@ -158,7 +159,7 @@ Profiler.prototype.convertOtpData = function(opts) {
 
     each(pattern.stops, function(stop) {
       obj.stops.push({
-        stop_id: stop.id
+        stop_id: getStopId(stop)
       });
     });
 
@@ -225,7 +226,7 @@ Profiler.prototype.convertOtpData = function(opts) {
         },
         to: {
           type: 'STOP',
-          stop_id: boardStop.id,
+          stop_id: getStopId(boardStop),
         },
         turnPoints : getTurnPoints(bestAccess.walkSteps)
       };
@@ -284,11 +285,11 @@ Profiler.prototype.convertOtpData = function(opts) {
             type: 'WALK',
             from: {
               type: 'STOP',
-              stop_id: alightStop.id
+              stop_id: getStopId(alightStop)
             },
             to: {
               type: 'STOP',
-              stop_id: boardStop.id
+              stop_id: getStopId(boardStop)
             }
           });
         }
@@ -305,7 +306,7 @@ Profiler.prototype.convertOtpData = function(opts) {
         type: bestEgress.mode,
         from: {
           type: 'STOP',
-          stop_id: alightStop.id
+          stop_id: getStopId(alightStop)
         },
         to: {
           type: 'PLACE',
@@ -366,6 +367,9 @@ function getTurnPoints(walkSteps) {
   return turnPoints;
 }
 
+function getStopId(stop) {
+  return stop.cluster || stop.id;
+}
 
 /**
  * Patterns
