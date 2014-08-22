@@ -230,6 +230,7 @@ Profiler.prototype.convertOtpData = function(opts) {
         },
         turnPoints : getTurnPoints(bestAccess.walkSteps)
       };
+      if(bestAccess.geometry) accessSegment.geometry = bestAccess.geometry;
 
       journey.segments.push(accessSegment);
     }
@@ -265,9 +266,6 @@ Profiler.prototype.convertOtpData = function(opts) {
       journey.segments.push({
         type: 'TRANSIT',
         patterns: patterns
-        /*pattern_id: firstPattern.patternId,
-        from_stop_index: firstPattern.fromIndex,
-        to_stop_index: firstPattern.toIndex*/
       });
 
       // Add a walk segment for the transfer, if needed
@@ -314,6 +312,7 @@ Profiler.prototype.convertOtpData = function(opts) {
         },
         turnPoints : getTurnPoints(bestEgress.walkSteps)
       };
+      if(bestEgress.geometry) egressSegment.geometry = bestEgress.geometry;
 
       journey.segments.push(egressSegment);
     }
@@ -334,7 +333,7 @@ function processNonTransitOption(option, optionIndex) {
     segments: []
   };
 
-  journey.segments.push({
+  var journeySegment = {
     type: option.mode.toUpperCase(),
     from: {
       type: 'PLACE',
@@ -345,7 +344,10 @@ function processNonTransitOption(option, optionIndex) {
       place_id: 'to',
     },
     turnPoints : getTurnPoints(option.walkSteps)
-  });
+  };
+  if(option.geometry) journeySegment.geometry = option.geometry;
+
+  journey.segments.push(journeySegment);
 
   return journey;
 }
