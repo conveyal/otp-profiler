@@ -204,7 +204,7 @@ Profiler.prototype.convertOtpData = function(opts) {
 
     // process option as transit journey
 
-    var journeyId = optionIndex + '_' + option.access[0].mode.toLowerCase();
+    var journeyId = optionIndex + '_transit';
     var journey = {
       journey_id: journeyId,
       journey_name: option.summary || journeyId,
