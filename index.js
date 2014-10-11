@@ -187,8 +187,7 @@ Profiler.prototype.convertOtpData = function(opts) {
   }
 
   // Collect journeys
-  var optionIndex = 0;
-  each(opts.profile.options, function(option) {
+  each(opts.profile.options, function(option, optionIndex) {
 
     // handle non-transit option as a special case
     if (!option.hasOwnProperty('transit')) {
@@ -198,7 +197,6 @@ Profiler.prototype.convertOtpData = function(opts) {
         var mode = leg.mode.toUpperCase();
         if(mode === 'WALK' || mode === 'BICYCLE' || mode === 'CAR') {
           data.journeys.push(processNonTransitOption(leg, optionIndex));
-          optionIndex++;
         }
       });
       return;
@@ -206,9 +204,10 @@ Profiler.prototype.convertOtpData = function(opts) {
 
     // process option as transit journey
 
+    var journeyId = optionIndex + '_transit';
     var journey = {
-      journey_id: 'option_' + optionIndex,
-      journey_name: option.summary || 'Option ' + (optionIndex + 1),
+      journey_id: journeyId,
+      journey_name: option.summary || journeyId,
       segments: []
     };
 
@@ -319,16 +318,15 @@ Profiler.prototype.convertOtpData = function(opts) {
 
     // Add the journey
     data.journeys.push(journey);
-
-    optionIndex++;
   });
 
   return data;
 };
 
 function processNonTransitOption(option, optionIndex) {
+  var journeyId = optionIndex + '_' + option.mode.toLowerCase();
   var journey = {
-    journey_id: 'option_' + optionIndex,
+    journey_id: journeyId,
     journey_name: option.mode.toUpperCase(),
     segments: []
   };
