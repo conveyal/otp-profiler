@@ -1,4 +1,9 @@
 
+## 0.4.2 — 2014-10-11
+
+* Include segment geometry w/ transitive data
+* Integrate stop clustering
+
 ## 0.4.1 — 2014-08-07
 
 * Unpin dependencies
