@@ -3,6 +3,7 @@
 
 * Include segment geometry w/ transitive data
 * Integrate stop clustering
+* Temp fix for journey naming: use 'optionIndex_transit' for transit journeys
 
 ## 0.4.1 — 2014-08-07
 
