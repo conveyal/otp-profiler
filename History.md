@@ -1,4 +1,8 @@
 
+## 0.4.3 — 2014-10-27
+
+* Return `response` object on request errors
+
 ## 0.4.2 — 2014-10-11
 
 * Include segment geometry w/ transitive data
