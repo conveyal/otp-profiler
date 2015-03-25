@@ -408,7 +408,7 @@ Profiler.prototype.processBikeRentalSegment = function(edges, from, to) {
 
   // add the main bike leg
   if(bikeRentalEdges.length > 0 && onStationEndpoint && offStationEndpoint) {
-    journeySegments.push(self.constructJourneySegment('BICYCLE', onStationEndpoint, offStationEndpoint, bikeRentalEdges));
+    journeySegments.push(self.constructJourneySegment('BICYCLE_RENT', onStationEndpoint, offStationEndpoint, bikeRentalEdges));
   }
 
   // add the walk leg from the "off" station, if applicable
