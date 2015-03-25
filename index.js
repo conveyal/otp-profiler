@@ -432,7 +432,7 @@ Profiler.prototype.addBikeRentalStation = function(station) {
 
   var place = {
     place_id: placeId,
-    place_name: "Bikeshare Station " + station.id + " (" + station.name + ")",
+    place_name: station.name,
     place_lat: station.lat,
     place_lon: station.lon
   };
