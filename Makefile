@@ -3,7 +3,6 @@ COMPONENT := ./node_modules/.bin/component
 JS := index.js $(shell find test -name '*.js' -print)
 
 build: install $(JS)
-	@$(MAKE) lint
 	@$(COMPONENT) build --dev --verbose
 
 beautify: install $(JS)
@@ -17,9 +16,6 @@ components: node_modules component.json
 
 install: node_modules components
 
-lint: install $(JS)
-	@./node_modules/.bin/jshint --verbose $(JS)
-
 node_modules: package.json
 	@npm install
 
@@ -32,4 +28,4 @@ test-client: build
 watch:
 	@watch $(MAKE) build
 
-.PHONY: beautify clean install lint test watch
+.PHONY: beautify clean install test watch
