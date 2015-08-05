@@ -356,24 +356,22 @@ Profiler.prototype.processNonTransitOption = function (option, optionIndex) {
 Profiler.prototype.processBikeRentalSegment = function (edges, from, to) {
   var self = this
 
-  var preWalkEdges = []
-  var bikeRentalEdges = []
-  var postWalkEdges = []
-  var currentLeg = preWalkEdges
-  var onStationEndpoint, offStationEndpoint
-  each(edges, function (edge) {
-    if (edge.bikeRentalOnStation) {
-      currentLeg = bikeRentalEdges
-      var onStation = self.addBikeRentalStation(edge.bikeRentalOnStation)
-      onStationEndpoint = constructPlaceEndpoint(onStation.place_id)
+  var preWalkEdges = [], bikeRentalEdges = [], postWalkEdges = [];
+  var currentLeg = preWalkEdges;
+  var onStationEndpoint, offStationEndpoint;
+  each(edges, function(edge) {
+    if(edge.bikeRentalOffStation) {
+      currentLeg = postWalkEdges;
+      var offStation = self.addBikeRentalStation(edge.bikeRentalOffStation);
+      offStationEndpoint = constructPlaceEndpoint(offStation.place_id);
     }
-    currentLeg.push(edge)
-    if (edge.bikeRentalOffStation) {
-      currentLeg = postWalkEdges
-      var offStation = self.addBikeRentalStation(edge.bikeRentalOffStation)
-      offStationEndpoint = constructPlaceEndpoint(offStation.place_id)
+    currentLeg.push(edge);
+    if(edge.bikeRentalOnStation) {
+      currentLeg = bikeRentalEdges;
+      var onStation = self.addBikeRentalStation(edge.bikeRentalOnStation);
+      onStationEndpoint = constructPlaceEndpoint(onStation.place_id);
     }
-  })
+  });
 
   var journeySegments = []
 
@@ -386,8 +384,8 @@ Profiler.prototype.processBikeRentalSegment = function (edges, from, to) {
   }
 
   // add the main bike leg
-  if (bikeRentalEdges.length > 0 && onStationEndpoint && offStationEndpoint) {
-    journeySegments.push(self.constructJourneySegment('BICYCLE', onStationEndpoint, offStationEndpoint, bikeRentalEdges))
+  if(bikeRentalEdges.length > 0 && onStationEndpoint && offStationEndpoint) {
+    journeySegments.push(self.constructJourneySegment('BICYCLE_RENT', onStationEndpoint, offStationEndpoint, bikeRentalEdges));
   }
 
   // add the walk leg from the "off" station, if applicable
@@ -411,7 +409,7 @@ Profiler.prototype.addBikeRentalStation = function (station) {
 
   var place = {
     place_id: placeId,
-    place_name: 'Bikeshare Station ' + station.id + ' (' + station.name + ')',
+    place_name: station.name,
     place_lat: station.lat,
     place_lon: station.lon
   }
