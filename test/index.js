@@ -1,5 +1,7 @@
-var assert = require('assert');
-var Profiler = require('..');
+/* global describe, it */
+
+var assert = require('assert')
+var Profiler = require('..')
 
 /**
  * TransitiveLoader Config
@@ -17,58 +19,58 @@ var config = {
     lon: -77.03453592419277
   },
   limit: 1
-};
+}
 
 /**
  * OTP Endpoint
  */
 
-var endpoint = 'http://localhost:8080/otp/routers/default';
+var endpoint = 'http://localhost:8080/otp/routers/default'
 
 /**
  * Mocha BDD
  */
 
-describe('otpprofiler.js', function() {
-  describe('#profile()', function() {
-    it('should request a profile correctly', function(done) {
+describe('otpprofiler.js', function () {
+  describe('#profile()', function () {
+    it('should request a profile correctly', function (done) {
       var profiler = new Profiler({
         host: endpoint
-      });
+      })
 
-      profiler.profile(config, function(err, results) {
-        if (err) return done(err);
-        assert(results.options.length > 0);
-        done();
-      });
-    });
-  });
+      profiler.profile(config, function (err, results) {
+        if (err) return done(err)
+        assert(results.options.length > 0)
+        done()
+      })
+    })
+  })
 
-  describe('#routes()', function() {
-    it('should request all of the available routes', function(done) {
+  describe('#routes()', function () {
+    it('should request all of the available routes', function (done) {
       var profiler = new Profiler({
         host: endpoint
-      });
+      })
 
-      profiler.routes(function(err, results) {
-        if (err) return done(err);
-        assert.deepEqual(results, require('./data/routes'));
-        done();
-      });
-    });
-  });
+      profiler.routes(function (err, results) {
+        if (err) return done(err)
+        assert.deepEqual(results, require('./data/routes'))
+        done()
+      })
+    })
+  })
 
-  describe('#journey()', function() {
-    it('should request patterns for a given O/D journey', function(done) {
+  describe('#journey()', function () {
+    it('should request patterns for a given O/D journey', function (done) {
       var profiler = new Profiler({
         host: endpoint
-      });
+      })
 
-      profiler.journey(config, function(err, results) {
-        if (err) return done(err);
-        assert(results.journeys.length > 0);
-        done();
-      });
-    });
-  });
-});
+      profiler.journey(config, function (err, results) {
+        if (err) return done(err)
+        assert(results.journeys.length > 0)
+        done()
+      })
+    })
+  })
+})

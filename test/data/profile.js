@@ -67,4 +67,4 @@ module.exports = {
     },
     'summary': 'routes 10A, Blue via PENTAGON STATION & BUS BAY U11'
   }]
-};
+}

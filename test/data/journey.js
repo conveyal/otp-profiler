@@ -586,7 +586,7 @@ module.exports = {
     'stop_lon': -77.028174
   }, {
     'stop_id': '5017',
-    'stop_name': 'L\'ENFANT PLAZA METRO STATION',
+    'stop_name': "L'ENFANT PLAZA METRO STATION",
     'stop_lat': 38.884886,
     'stop_lon': -77.0216
   }, {
@@ -640,4 +640,4 @@ module.exports = {
     'stop_lat': 38.900269,
     'stop_lon': -76.84454
   }]
-};
+}
