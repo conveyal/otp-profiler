@@ -25,7 +25,7 @@ var config = {
  * OTP Endpoint
  */
 
-var endpoint = 'http://localhost:8080/otp/routers/default'
+var endpoint = 'http://192.168.59.103:8080/otp/routers/default'
 
 /**
  * Mocha BDD
@@ -54,6 +54,7 @@ describe('otpprofiler.js', function () {
 
       profiler.routes(function (err, results) {
         if (err) return done(err)
+
         assert.deepEqual(results, require('./data/routes'))
         done()
       })
@@ -68,7 +69,8 @@ describe('otpprofiler.js', function () {
 
       profiler.journey(config, function (err, results) {
         if (err) return done(err)
-        assert(results.journeys.length > 0)
+
+        assert.equal(JSON.stringify(results).length, JSON.stringify(require('./data/journey')).length)
         done()
       })
     })

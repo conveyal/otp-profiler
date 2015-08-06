@@ -5,9 +5,6 @@ JS := index.js $(shell find test -name '*.js' -print)
 build: install $(JS)
 	@$(COMPONENT) build --dev --verbose
 
-beautify: install $(JS)
-	@./node_modules/.bin/js-beautify --replace $(JS)
-
 clean:
 	rm -rf build components
 
