@@ -1,4 +1,8 @@
 
+## 0.5.0 — 2015-08-06
+
+* Split out formatter into it's own module
+
 ## 0.4.3 — 2014-10-27
 
 * Return `response` object on request errors
