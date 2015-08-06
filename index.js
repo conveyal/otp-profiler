@@ -1,5 +1,6 @@
 var Batch = require('batch')
 var clone
+var otpProfileToTransitive = require('otp-profile-to-transitive')
 var superagent = require('superagent')
 
 try {
@@ -7,8 +8,6 @@ try {
 } catch (e) {
   clone = require('component-clone')
 }
-
-var formatOtpToTransitive = require('./format-otp-to-transitive')
 
 /**
  * "store" routes & pattens
@@ -80,7 +79,7 @@ Profiler.prototype.journey = function (opts, callback) {
           callback(err)
         } else {
           opts.patterns = patterns
-          callback(null, formatOtpToTransitive(opts))
+          callback(null, otpProfileToTransitive(opts))
         }
       })
     }

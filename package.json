@@ -9,7 +9,7 @@
   "dependencies": {
     "batch": "*",
     "component-clone": "*",
-    "component-each": "*",
+    "otp-profile-to-transitive": "0.0.1",
     "superagent": "*"
   },
   "devDependencies": {
